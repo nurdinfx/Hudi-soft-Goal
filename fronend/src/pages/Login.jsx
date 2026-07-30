@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { 
   Eye, EyeOff, Loader, User, Lock, ArrowRight, TrendingUp, 
-  CheckCircle2, Bell, ShieldCheck, DollarSign, Users, CreditCard, Activity, BarChart2
+  ShieldCheck, Sparkles, Zap, Check, Users, Server, Clock, 
+  Building2, CreditCard, Activity, Bell, ChevronRight
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -51,27 +52,40 @@ const Login = () => {
     }
   };
 
+  const trustStats = [
+    { value: '1000+', label: 'Businesses', icon: Building2 },
+    { value: '250K+', label: 'Active Users', icon: Users },
+    { value: '99.99%', label: 'Uptime', icon: Server },
+    { value: '24/7', label: 'Support', icon: Clock },
+  ];
+
+  const features = [
+    'Multi-Tenant Cloud',
+    'AI Powered Analytics',
+    'Enterprise Security',
+  ];
+
   return (
     <div className="min-h-screen w-full bg-slate-50 text-slate-800 flex items-center justify-center p-4 sm:p-6 lg:p-10 relative overflow-hidden font-sans selection:bg-blue-500 selection:text-white">
       
-      {/* Dynamic Bright Ambient Background Glows & Mesh Gradients */}
-      <div className="absolute -top-32 -left-32 w-[600px] h-[600px] bg-gradient-to-tr from-blue-300/30 to-sky-200/40 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute -bottom-32 right-0 w-[600px] h-[600px] bg-gradient-to-bl from-indigo-200/40 via-sky-200/30 to-blue-300/20 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-cyan-200/30 rounded-full blur-[150px] pointer-events-none" />
+      {/* Stripe/Linear Style Bright Radial Glow Mesh Background */}
+      <div className="absolute -top-40 -left-40 w-[700px] h-[700px] bg-gradient-to-tr from-blue-400/25 via-sky-300/30 to-indigo-300/20 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute -bottom-40 -right-40 w-[700px] h-[700px] bg-gradient-to-bl from-sky-300/30 via-indigo-200/30 to-blue-400/20 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/3 -translate-y-1/2 w-[550px] h-[550px] bg-cyan-200/30 rounded-full blur-[160px] pointer-events-none" />
 
-      {/* Subtle Dot Matrix Pattern */}
+      {/* Subtle Grid Matrix Background */}
       <div 
         className="absolute inset-0 opacity-[0.035] pointer-events-none" 
-        style={{ backgroundImage: `radial-gradient(#2563eb 1.2px, transparent 1.2px)`, backgroundSize: '28px 28px' }} 
+        style={{ backgroundImage: `radial-gradient(#2563eb 1.2px, transparent 1.2px)`, backgroundSize: '32px 32px' }} 
       />
 
-      {/* Main Container: Split-Screen Layout */}
-      <div className="relative z-10 w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center my-auto">
+      {/* Main Split Layout Grid */}
+      <div className="relative z-10 w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center my-auto">
         
-        {/* ================= LEFT SIDE (65% HERO SECTION - BRIGHT PRODUCT SHOWCASE) ================= */}
-        <div className="lg:col-span-7 space-y-8 pr-0 lg:pr-4">
+        {/* ================= LEFT SIDE (65% PRODUCT SHOWCASE & HERO) ================= */}
+        <div className="lg:col-span-7 space-y-8 order-2 lg:order-1 pr-0 lg:pr-2">
           
-          {/* Top Brand Header */}
+          {/* Brand Logo Header */}
           <div className="flex items-center gap-3">
             <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-600 via-sky-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/25">
               <span className="text-white font-black text-xl tracking-wider">HS</span>
@@ -80,163 +94,185 @@ const Login = () => {
               <h2 className="text-xl font-black tracking-tight text-slate-900 leading-none">
                 HUDI-SOFT <span className="text-blue-600">SYSTEMS</span>
               </h2>
-              <p className="text-xs font-semibold text-sky-600 tracking-wide mt-0.5">
-                Enterprise Cloud Software
+              <p className="text-[11px] font-bold tracking-widest text-sky-600 uppercase mt-0.5">
+                Enterprise Operating System
               </p>
             </div>
           </div>
 
           {/* Headline & Subtitle */}
-          <div className="space-y-3">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.1]">
-              Manage Your Business <br />
+          <div className="space-y-4">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.08]">
+              Manage Everything. <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-sky-500 to-indigo-600">
-                With Confidence
+                From One Powerful Platform.
               </span>
             </h1>
             <p className="text-slate-600 text-base sm:text-lg max-w-xl leading-relaxed font-normal">
-              Access all your HUDI-SOFT applications from one secure, powerful platform. Simplify operations, drive efficiency, and scale seamlessly.
+              HUDI-SOFT helps schools, hospitals, restaurants, supermarkets, hotels, and businesses manage operations with speed, security, and intelligence.
             </p>
           </div>
 
-          {/* 3D-Style Device & Floating UI Showcase */}
-          <div className="relative pt-4 pb-2">
+          {/* 3 Premium Feature Pills */}
+          <div className="flex flex-wrap items-center gap-3">
+            {features.map((feat, idx) => (
+              <div 
+                key={idx} 
+                className="flex items-center gap-2 bg-white/90 border border-slate-200/80 rounded-full px-4 py-2 shadow-sm shadow-blue-900/5 text-xs font-bold text-slate-700 backdrop-blur-md"
+              >
+                <div className="w-4 h-4 rounded-full bg-blue-600 text-white flex items-center justify-center">
+                  <Check className="w-2.5 h-2.5 stroke-[3]" />
+                </div>
+                <span>{feat}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Multi-Device Overlapping 3D-Style Showcase */}
+          <div className="relative pt-2 pb-4 hidden sm:block">
             
-            {/* Main Laptop & Desktop Showcase Card */}
-            <div className="relative bg-white/90 backdrop-blur-xl border border-white/80 rounded-3xl p-6 shadow-2xl shadow-blue-900/10 transition-all duration-300">
+            {/* Desktop / Laptop Main Monitor Mockup */}
+            <div className="relative bg-white/95 backdrop-blur-2xl border border-slate-200/90 rounded-3xl p-5 shadow-2xl shadow-blue-900/15">
               
               {/* Laptop Display Header */}
-              <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-rose-400" />
                   <div className="w-3 h-3 rounded-full bg-amber-400" />
                   <div className="w-3 h-3 rounded-full bg-emerald-400" />
-                  <span className="ml-2 text-xs font-bold text-slate-500 tracking-wide uppercase">
-                    HUDI-SOFT Enterprise Dashboard
+                  <span className="ml-2 text-[11px] font-extrabold text-slate-500 uppercase tracking-wide">
+                    HUDI-SOFT Multi-Industry Dashboard
                   </span>
                 </div>
-                <div className="flex items-center gap-2 text-xs font-semibold text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">
                   <Activity className="w-3.5 h-3.5" />
-                  <span>Real-time Sync</span>
+                  <span>AI Analytics Active</span>
                 </div>
               </div>
 
-              {/* Dashboard Content Mockup Grid */}
-              <div className="grid grid-cols-12 gap-4">
+              {/* Mockup Dashboard Body */}
+              <div className="grid grid-cols-12 gap-3">
                 
-                {/* Left Mini Sidebar */}
-                <div className="col-span-3 bg-slate-50 rounded-2xl p-3 space-y-2 border border-slate-100 hidden sm:block">
-                  <div className="h-7 bg-blue-600 text-white rounded-xl text-[10px] font-bold flex items-center px-2.5 gap-2">
-                    <BarChart2 className="w-3.5 h-3.5" /> Analytics
+                {/* Stats Cards Row */}
+                <div className="col-span-12 grid grid-cols-4 gap-2 mb-1">
+                  <div className="bg-gradient-to-br from-blue-50 to-sky-50 p-2.5 rounded-xl border border-blue-100">
+                    <p className="text-[9px] font-extrabold text-slate-400 uppercase">Revenue</p>
+                    <p className="text-sm sm:text-base font-black text-blue-900 mt-0.5">$58,490</p>
+                    <span className="text-[9px] font-bold text-emerald-600">↑ +19.2%</span>
                   </div>
-                  <div className="h-7 text-slate-500 rounded-xl text-[10px] font-semibold flex items-center px-2.5 gap-2 hover:bg-slate-100">
-                    <Users className="w-3.5 h-3.5" /> Customers
+                  <div className="bg-gradient-to-br from-sky-50 to-indigo-50 p-2.5 rounded-xl border border-sky-100">
+                    <p className="text-[9px] font-extrabold text-slate-400 uppercase">Attendance</p>
+                    <p className="text-sm sm:text-base font-black text-indigo-900 mt-0.5">98.4%</p>
+                    <span className="text-[9px] font-bold text-blue-600">Optimal</span>
                   </div>
-                  <div className="h-7 text-slate-500 rounded-xl text-[10px] font-semibold flex items-center px-2.5 gap-2 hover:bg-slate-100">
-                    <DollarSign className="w-3.5 h-3.5" /> Finance
+                  <div className="bg-gradient-to-br from-indigo-50 to-purple-50 p-2.5 rounded-xl border border-indigo-100">
+                    <p className="text-[9px] font-extrabold text-slate-400 uppercase">Orders / POS</p>
+                    <p className="text-sm sm:text-base font-black text-purple-900 mt-0.5">3,420</p>
+                    <span className="text-[9px] font-bold text-emerald-600">↑ +14.5%</span>
                   </div>
-                  <div className="h-7 text-slate-500 rounded-xl text-[10px] font-semibold flex items-center px-2.5 gap-2 hover:bg-slate-100">
-                    <CreditCard className="w-3.5 h-3.5" /> POS Billing
+                  <div className="bg-gradient-to-br from-emerald-50 to-teal-50 p-2.5 rounded-xl border border-emerald-100">
+                    <p className="text-[9px] font-extrabold text-slate-400 uppercase">AI Efficiency</p>
+                    <p className="text-sm sm:text-base font-black text-emerald-900 mt-0.5">99.9%</p>
+                    <span className="text-[9px] font-bold text-emerald-600">Secured</span>
                   </div>
                 </div>
 
-                {/* Main Dashboard Panel */}
-                <div className="col-span-12 sm:col-span-9 space-y-3">
-                  {/* Top Stats Cards */}
-                  <div className="grid grid-cols-3 gap-2.5">
-                    <div className="bg-gradient-to-br from-blue-50 to-sky-50 p-3 rounded-2xl border border-blue-100">
-                      <p className="text-[10px] font-bold text-slate-500 uppercase">Monthly Revenue</p>
-                      <p className="text-base sm:text-lg font-black text-blue-900 mt-0.5">$48,920</p>
-                      <span className="text-[10px] font-bold text-emerald-600 flex items-center gap-0.5">
-                        <TrendingUp className="w-3 h-3" /> +18.4%
-                      </span>
-                    </div>
-                    <div className="bg-gradient-to-br from-sky-50 to-indigo-50 p-3 rounded-2xl border border-sky-100">
-                      <p className="text-[10px] font-bold text-slate-500 uppercase">Active Users</p>
-                      <p className="text-base sm:text-lg font-black text-indigo-900 mt-0.5">12,840</p>
-                      <span className="text-[10px] font-bold text-blue-600 flex items-center gap-0.5">
-                        <Users className="w-3 h-3" /> High Activity
-                      </span>
-                    </div>
-                    <div className="bg-gradient-to-br from-indigo-50 to-purple-50 p-3 rounded-2xl border border-indigo-100">
-                      <p className="text-[10px] font-bold text-slate-500 uppercase">System Health</p>
-                      <p className="text-base sm:text-lg font-black text-purple-900 mt-0.5">99.99%</p>
-                      <span className="text-[10px] font-bold text-emerald-600 flex items-center gap-0.5">
-                        <CheckCircle2 className="w-3 h-3" /> Operational
-                      </span>
-                    </div>
+                {/* Graph Analytics View */}
+                <div className="col-span-8 bg-slate-50/80 rounded-xl p-2.5 border border-slate-100">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-[9px] font-bold text-slate-600 uppercase">Multi-Tenant Business Performance</span>
+                    <span className="text-[9px] font-semibold text-slate-400">Live AI Stream</span>
                   </div>
+                  <div className="h-14 w-full flex items-end gap-1 pt-1">
+                    {[40, 65, 50, 80, 70, 95, 85, 100, 90, 95, 88, 100].map((h, i) => (
+                      <div 
+                        key={i} 
+                        className="flex-1 bg-gradient-to-t from-blue-600 to-sky-400 rounded-t-xs hover:from-blue-500 hover:to-indigo-500 transition-all" 
+                        style={{ height: `${h}%` }} 
+                      />
+                    ))}
+                  </div>
+                </div>
 
-                  {/* Graph Visual Mockup */}
-                  <div className="bg-slate-50 rounded-2xl p-3 border border-slate-100">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-[10px] font-bold text-slate-600 uppercase">Revenue Growth Trend</span>
-                      <span className="text-[10px] font-semibold text-slate-400">Jan - Dec 2026</span>
-                    </div>
-                    <div className="h-16 w-full flex items-end gap-1.5 pt-1">
-                      {[45, 60, 50, 75, 65, 85, 95, 80, 100, 90, 85, 100].map((val, idx) => (
-                        <div 
-                          key={idx} 
-                          className="flex-1 bg-gradient-to-t from-blue-600 to-sky-400 rounded-t-sm hover:from-blue-500 hover:to-indigo-500 transition-all" 
-                          style={{ height: `${val}%` }} 
-                        />
-                      ))}
-                    </div>
+                {/* Side Quick Tasks */}
+                <div className="col-span-4 bg-slate-50/80 rounded-xl p-2.5 border border-slate-100 flex flex-col justify-between">
+                  <p className="text-[9px] font-bold text-slate-600 uppercase">Recent AI Reports</p>
+                  <div className="space-y-1">
+                    <div className="h-1.5 bg-blue-500/40 rounded-full w-full" />
+                    <div className="h-1.5 bg-sky-400/40 rounded-full w-4/5" />
+                    <div className="h-1.5 bg-indigo-400/40 rounded-full w-2/3" />
                   </div>
+                  <span className="text-[8px] font-bold text-emerald-600 flex items-center gap-1">
+                    <Sparkles className="w-2.5 h-2.5" /> All Operations Normal
+                  </span>
                 </div>
 
               </div>
 
             </div>
 
-            {/* Floating UI Card 1: Revenue Notification */}
-            <div className="absolute -top-4 -right-4 bg-white/95 backdrop-blur-xl border border-slate-100 rounded-2xl p-3.5 shadow-xl shadow-blue-900/10 flex items-center gap-3 animate-float hidden sm:flex">
-              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
-                <DollarSign className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-slate-900">Payment Received</p>
-                <p className="text-[11px] font-bold text-emerald-600">+$1,450.00 Approved</p>
-              </div>
-            </div>
-
-            {/* Floating UI Card 2: Security Verified */}
-            <div className="absolute -bottom-4 -left-4 bg-white/95 backdrop-blur-xl border border-slate-100 rounded-2xl p-3.5 shadow-xl shadow-blue-900/10 flex items-center gap-3 animate-float-delay hidden sm:flex">
-              <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
-                <ShieldCheck className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-slate-900">Enterprise Security</p>
-                <p className="text-[11px] font-semibold text-slate-500">256-bit Encrypted Protection</p>
+            {/* Overlapping Floating Smartphone Mockup */}
+            <div className="absolute -bottom-5 -left-5 w-36 sm:w-44 rounded-3xl bg-slate-900 border-4 border-slate-700/80 p-2 shadow-2xl shadow-blue-950/40 z-20 transform -rotate-3 hover:rotate-0 transition-transform duration-300">
+              <div className="w-10 h-2 bg-slate-800 rounded-full mx-auto mb-1.5" />
+              <div className="bg-slate-950 rounded-xl p-2 space-y-1.5 border border-slate-800">
+                <div className="flex items-center justify-between">
+                  <span className="text-[8px] font-bold text-cyan-400">Mobile Admin</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                </div>
+                <div className="bg-blue-600/20 rounded-lg p-1 border border-blue-500/30">
+                  <p className="text-[7px] text-slate-400">Today Sales</p>
+                  <p className="text-[11px] font-bold text-white">$4,850.00</p>
+                </div>
               </div>
             </div>
 
-            {/* Floating UI Card 3: Instant Invoice */}
-            <div className="absolute bottom-1/3 -right-6 bg-white/95 backdrop-blur-xl border border-slate-100 rounded-2xl p-3 shadow-xl shadow-indigo-900/10 flex items-center gap-2.5 hidden md:flex">
-              <div className="w-8 h-8 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center">
-                <Bell className="w-4 h-4" />
+            {/* Floating Widget Card 1: Revenue */}
+            <div className="absolute -top-4 -right-4 bg-white/95 backdrop-blur-xl border border-slate-100 rounded-2xl p-3 shadow-xl shadow-blue-900/10 flex items-center gap-2.5 z-20">
+              <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+                <TrendingUp className="w-4 h-4" />
               </div>
-              <span className="text-xs font-bold text-slate-700">Invoice #8492 Processed</span>
+              <div>
+                <p className="text-[11px] font-bold text-slate-900">Revenue Growth</p>
+                <p className="text-[10px] font-bold text-emerald-600">+$12,450 This Week</p>
+              </div>
+            </div>
+
+            {/* Floating Widget Card 2: Notification */}
+            <div className="absolute bottom-1/4 -right-6 bg-white/95 backdrop-blur-xl border border-slate-100 rounded-2xl p-2.5 shadow-xl shadow-indigo-900/10 flex items-center gap-2 z-20">
+              <div className="w-7 h-7 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center">
+                <Bell className="w-3.5 h-3.5" />
+              </div>
+              <span className="text-[10px] font-bold text-slate-700">Invoice #9402 Paid</span>
             </div>
 
           </div>
 
-          {/* Footer Quality Note */}
-          <p className="text-xs font-medium text-slate-500 flex items-center gap-2 pt-2">
-            <ShieldCheck className="w-4 h-4 text-blue-600" />
-            <span>Trusted by leading enterprises & organizations worldwide</span>
-          </p>
+          {/* Trust Statistics Bar */}
+          <div className="pt-2 border-t border-slate-200/80 grid grid-cols-4 gap-3">
+            {trustStats.map((stat, idx) => {
+              const StatIcon = stat.icon;
+              return (
+                <div key={idx} className="space-y-0.5">
+                  <div className="flex items-center gap-1 text-blue-600">
+                    <StatIcon className="w-3.5 h-3.5" />
+                    <p className="text-base sm:text-lg font-black text-slate-900 tracking-tight">{stat.value}</p>
+                  </div>
+                  <p className="text-[11px] font-semibold text-slate-500">{stat.label}</p>
+                </div>
+              );
+            })}
+          </div>
 
         </div>
 
-        {/* ================= RIGHT SIDE (35% LUXURIOUS BRIGHT LOGIN CARD) ================= */}
-        <div className="lg:col-span-5 w-full">
-          <div className="relative rounded-[2rem] p-[1.5px] bg-gradient-to-b from-blue-400/50 via-sky-300/30 to-indigo-400/40 shadow-2xl shadow-blue-900/15">
+        {/* ================= RIGHT SIDE (35% FLOATING GLASS LOGIN CARD) ================= */}
+        <div className="lg:col-span-5 w-full order-1 lg:order-2">
+          <div className="relative rounded-[32px] p-[1.5px] bg-gradient-to-b from-blue-400/60 via-sky-300/40 to-indigo-400/50 shadow-2xl shadow-blue-900/15">
             
-            {/* White Glass Card */}
-            <div className="bg-white/90 backdrop-blur-2xl rounded-[2rem] p-7 sm:p-10 space-y-7">
+            {/* White Transparent Floating Glass Card (32px rounded) */}
+            <div className="bg-white/90 backdrop-blur-2xl rounded-[32px] p-7 sm:p-10 space-y-6">
               
-              {/* Header Title */}
+              {/* Header Title & Subtitle */}
               <div className="text-center space-y-2">
                 <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-600 via-sky-500 to-indigo-600 shadow-xl shadow-blue-500/25 mb-1">
                   <span className="text-white font-black text-2xl tracking-wider">HS</span>
@@ -251,7 +287,7 @@ const Login = () => {
               </div>
 
               {/* Login Form */}
-              <form className="space-y-4 pt-1" onSubmit={handleSubmit}>
+              <form className="space-y-4.5 pt-1" onSubmit={handleSubmit}>
                 
                 {/* Username Input */}
                 <div className="space-y-1.5">
@@ -329,11 +365,11 @@ const Login = () => {
                   </div>
                 )}
 
-                {/* Large Blue Gradient CTA Button */}
+                {/* Primary Button (Royal Blue -> Sky Blue Gradient) */}
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-4 px-6 rounded-2xl font-black text-sm text-white shadow-xl shadow-blue-600/30 bg-gradient-to-r from-blue-600 via-sky-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 hover:shadow-blue-600/40 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2 mt-2"
+                  className="w-full py-4 px-6 rounded-2xl font-black text-sm text-white shadow-xl shadow-blue-600/30 bg-gradient-to-r from-blue-600 via-sky-500 to-blue-600 hover:from-blue-500 hover:to-sky-400 hover:shadow-blue-600/40 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2 mt-2"
                 >
                   {loading ? (
                     <>
@@ -342,7 +378,7 @@ const Login = () => {
                     </>
                   ) : (
                     <>
-                      <span>Sign In to Workspace</span>
+                      <span>Sign In to Platform</span>
                       <ArrowRight className="w-4 h-4" />
                     </>
                   )}
@@ -350,11 +386,15 @@ const Login = () => {
 
               </form>
 
-              {/* Copyright & Security Footer */}
-              <div className="pt-3 text-center border-t border-slate-100 space-y-1">
-                <p className="text-[11px] text-slate-400 font-medium">
-                  © 2026 HUDI-SOFT SYSTEMS. All rights reserved.
-                </p>
+              {/* Data Protection Security Note */}
+              <div className="pt-2 text-center text-xs text-slate-500 flex items-center justify-center gap-1.5 border-t border-slate-100">
+                <ShieldCheck className="w-4 h-4 text-blue-600" />
+                <span>Your data is protected with enterprise-grade security</span>
+              </div>
+
+              {/* Copyright */}
+              <div className="text-center text-[11px] text-slate-400 font-medium">
+                © 2026 HUDI-SOFT SYSTEMS. All rights reserved.
               </div>
 
             </div>
