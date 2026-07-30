@@ -11,7 +11,9 @@ const defaultAllowedOrigins = [
   'http://localhost:3000',
   'https://goalfrontend-chi.vercel.app',
   'https://goalfrontend-km2o.vercel.app',
-  'https://goalfrontend.vercel.app'
+  'https://goalfrontend.vercel.app',
+  'https://hudi-soft-goal-qlli.vercel.app',
+  'https://hudi-soft-goal.vercel.app'
 ];
 const envAllowedOrigins = (process.env.CLIENT_URLS || process.env.CLIENT_URL || '')
   .split(',')
@@ -25,10 +27,10 @@ const isAllowedVercelOrigin = (origin = '') => {
   try {
     const url = new URL(origin);
     // Allow all Vercel preview URLs for this project
-    return (url.protocol === 'https:' &&
+    return url.protocol === 'https:' &&
       url.hostname.endsWith('.vercel.app') &&
-      url.hostname.includes('goalfrontend')) ||
-      url.hostname === 'goalfrontend.vercel.app';
+      (url.hostname.includes('goalfrontend') ||
+       url.hostname.includes('hudi-soft-goal'));
   } catch {
     return false;
   }
