@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Eye, EyeOff, Loader, CheckCircle, XCircle } from 'lucide-react';
+import { Eye, EyeOff, Loader, CheckCircle, XCircle, ShieldCheck, User, Lock, Sparkles, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
@@ -35,89 +35,120 @@ const Login = () => {
       const result = await login(formData);
       
       if (result.success) {
-        console.log('Login successful, redirecting...');
-        // Force redirect to dashboard
-        window.location.href = '/dashboard';
+        window.location.href = '/';
       } else {
-        setError(result.error);
+        setError(result.error || 'Invalid credentials');
       }
-    } catch (error) {
-      console.error('Login error:', error);
-      setError(error.message || 'Login failed. Please try again.');
+    } catch (err) {
+      console.error('Login error:', err);
+      setError(err.message || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="max-w-md w-full space-y-8">
-        {/* Header */}
-        <div className="text-center">
-          <div className="mx-auto h-16 w-16 bg-blue-600 rounded-full flex items-center justify-center">
-            <span className="text-white text-2xl font-bold">G</span>
-          </div>
-          <h2 className="mt-6 text-3xl font-bold text-gray-900">
-            Garbage Collection System
-          </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Sign in to your account
-          </p>
-        </div>
+    <div className="relative min-h-screen w-full flex items-center justify-center p-4 overflow-hidden bg-slate-950 font-sans selection:bg-blue-500 selection:text-white">
+      {/* Dynamic Animated Background Gradients & Glow Orbs */}
+      <div className="absolute -top-40 -left-40 w-96 h-96 bg-blue-600/30 rounded-full blur-[120px] animate-pulse" />
+      <div className="absolute top-1/2 -right-40 w-96 h-96 bg-indigo-600/25 rounded-full blur-[140px] animate-pulse delay-1000" />
+      <div className="absolute -bottom-40 left-1/3 w-96 h-96 bg-cyan-600/20 rounded-full blur-[130px] animate-pulse delay-700" />
+      
+      {/* Grid Pattern Overlay */}
+      <div 
+        className="absolute inset-0 opacity-[0.03] pointer-events-none" 
+        style={{ backgroundImage: `radial-gradient(#ffffff 1px, transparent 1px)`, backgroundSize: '32px 32px' }} 
+      />
 
-        {/* Backend Status */}
-        <div className="bg-white rounded-lg p-4 shadow-sm border">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-700">Backend Status:</span>
+      <div className="relative z-10 w-full max-w-md">
+        {/* Main Card */}
+        <div className="backdrop-blur-xl bg-slate-900/80 border border-slate-800/80 rounded-3xl p-8 sm:p-10 shadow-2xl shadow-blue-950/50 transition-all duration-300">
+          
+          {/* Brand & Header Section */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center mb-4 relative group">
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-blue-600 to-cyan-400 blur-md opacity-75 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="relative h-16 w-16 bg-slate-900 border border-blue-500/40 rounded-2xl flex items-center justify-center shadow-inner">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300 text-2xl font-black tracking-wider">
+                  HS
+                </span>
+              </div>
+            </div>
+
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold uppercase tracking-widest mb-3">
+              <Sparkles className="w-3.5 h-3.5 animate-spin-slow" />
+              Enterprise Suite
+            </div>
+
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight">
+              WELCOME <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-cyan-400">HUDI-SOFT-SYSTEMS</span>
+            </h1>
+            <p className="mt-2 text-sm text-slate-400 font-medium">
+              AND ENJOY YOUR MANAGEMENT EXPERIENCE
+            </p>
+          </div>
+
+          {/* Backend Status Pill */}
+          <div className="mb-6 bg-slate-950/60 rounded-2xl p-3 border border-slate-800/90 flex items-center justify-between text-xs font-medium">
+            <span className="text-slate-400 flex items-center gap-1.5">
+              <ShieldCheck className="w-4 h-4 text-blue-400" /> Server Status
+            </span>
             <div className="flex items-center space-x-2">
               {backendStatus === 'checking' && (
-                <>
-                  <Loader className="w-4 h-4 animate-spin text-blue-500" />
-                  <span className="text-sm text-blue-600">Checking...</span>
-                </>
+                <div className="flex items-center gap-1.5 text-cyan-400">
+                  <Loader className="w-3.5 h-3.5 animate-spin" />
+                  <span>Connecting...</span>
+                </div>
               )}
               {backendStatus === 'connected' && (
-                <>
-                  <CheckCircle className="w-4 h-4 text-green-500" />
-                  <span className="text-sm text-green-600">Connected</span>
-                </>
+                <div className="flex items-center gap-1.5 text-emerald-400 font-semibold bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                  <CheckCircle className="w-3.5 h-3.5" />
+                  <span>Online</span>
+                </div>
               )}
               {backendStatus === 'disconnected' && (
-                <>
-                  <XCircle className="w-4 h-4 text-red-500" />
-                  <span className="text-sm text-red-600">Demo Mode</span>
-                </>
+                <div className="flex items-center gap-1.5 text-amber-400 font-semibold bg-amber-500/10 px-2.5 py-1 rounded-full border border-amber-500/20">
+                  <XCircle className="w-3.5 h-3.5" />
+                  <span>Demo Mode</span>
+                </div>
               )}
             </div>
           </div>
-        </div>
 
-
-        {/* Login Form */}
-        <form className="mt-8 space-y-6 bg-white p-8 rounded-xl shadow-sm border" onSubmit={handleSubmit}>
-          <div className="space-y-4">
+          {/* Login Form */}
+          <form className="space-y-5" onSubmit={handleSubmit}>
+            {/* Username Input */}
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="username" className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
                 Username
               </label>
-              <input
-                id="username"
-                name="username"
-                type="text"
-                required
-                value={formData.username}
-                onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Enter your username"
-              />
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500 group-focus-within:text-blue-400 transition-colors">
+                  <User className="w-4 h-4" />
+                </div>
+                <input
+                  id="username"
+                  name="username"
+                  type="text"
+                  required
+                  value={formData.username}
+                  onChange={handleChange}
+                  className="w-full pl-10 pr-4 py-3 bg-slate-950/70 border border-slate-800 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                  placeholder="Enter your username"
+                />
+              </div>
             </div>
 
+            {/* Password Input */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
                 Password
               </label>
-              <div className="mt-1 relative">
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500 group-focus-within:text-blue-400 transition-colors">
+                  <Lock className="w-4 h-4" />
+                </div>
                 <input
                   id="password"
                   name="password"
@@ -125,63 +156,54 @@ const Login = () => {
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pr-10"
+                  className="w-full pl-10 pr-10 py-3 bg-slate-950/70 border border-slate-800 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
                   placeholder="Enter your password"
                 />
                 <button
                   type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-500 hover:text-slate-300 transition-colors"
                   onClick={() => setShowPassword(!showPassword)}
+                  tabIndex={-1}
                 >
-                  {showPassword ? (
-                    <EyeOff className="h-4 w-4 text-gray-400" />
-                  ) : (
-                    <Eye className="h-4 w-4 text-gray-400" />
-                  )}
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
             </div>
-          </div>
 
-          {error && (
-            <div className="rounded-md bg-red-50 p-4">
-              <div className="flex">
-                <XCircle className="h-5 w-5 text-red-400" />
-                <div className="ml-3">
-                  <h3 className="text-sm font-medium text-red-800">
-                    Login failed
-                  </h3>
-                  <p className="text-sm text-red-700 mt-1">
-                    {error}
-                  </p>
-                </div>
+            {/* Error Message */}
+            {error && (
+              <div className="rounded-xl bg-red-500/10 border border-red-500/30 p-3.5 text-red-400 text-xs font-medium flex items-center gap-2.5 animate-headShake">
+                <XCircle className="h-4 w-4 shrink-0 text-red-400" />
+                <span>{error}</span>
               </div>
-            </div>
-          )}
+            )}
 
-          <div>
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="relative w-full overflow-hidden rounded-xl py-3.5 px-4 font-bold text-sm text-white shadow-lg shadow-blue-600/30 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 hover:from-blue-500 hover:to-indigo-500 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2 group"
             >
               {loading ? (
                 <>
-                  <Loader className="w-5 h-5 animate-spin mr-2" />
-                  Signing in...
+                  <Loader className="w-4 h-4 animate-spin text-white" />
+                  <span>Authenticating...</span>
                 </>
               ) : (
-                'Sign in'
+                <>
+                  <span>Sign In To Platform</span>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </>
               )}
             </button>
-          </div>
-        </form>
+          </form>
 
-        {/* Footer */}
-        <div className="text-center">
-          <p className="text-xs text-gray-500">
-            Garbage Collection Management System v1.0
-          </p>
+          {/* Footer Note */}
+          <div className="mt-8 pt-6 border-t border-slate-800/80 text-center">
+            <p className="text-[11px] text-slate-500 font-medium">
+              HUDI-SOFT SYSTEMS Enterprise Edition • Secured Access
+            </p>
+          </div>
         </div>
       </div>
     </div>
