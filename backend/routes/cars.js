@@ -375,4 +375,83 @@ router.delete('/:carId/expenses/:expenseId', async (req, res) => {
   }
 });
 
+// Add revenue entry to car
+router.post('/:id/revenue', async (req, res) => {
+  try {
+    const car = await Car.findById(req.params.id);
+    if (!car || !car.isActive) {
+      return res.status(404).json({ success: false, message: 'Car not found or inactive' });
+    }
+
+    const revenueData = {
+      amount: parseFloat(req.body.amount),
+      date: req.body.date ? new Date(req.body.date) : new Date(),
+      source: req.body.source?.trim(),
+      description: req.body.description?.trim() || '',
+      tripType: req.body.tripType || 'collection'
+    };
+
+    if (!revenueData.amount || revenueData.amount <= 0) {
+      return res.status(400).json({ success: false, message: 'Amount must be greater than 0' });
+    }
+    if (!revenueData.source) {
+      return res.status(400).json({ success: false, message: 'Source is required' });
+    }
+
+    car.revenueEntries.push(revenueData);
+    await car.save();
+
+    res.status(201).json({ success: true, data: car, message: 'Revenue entry added successfully' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error adding revenue entry', error: error.message });
+  }
+});
+
+// Update revenue entry
+router.put('/:carId/revenue/:revenueId', async (req, res) => {
+  try {
+    const car = await Car.findById(req.params.carId);
+    if (!car || !car.isActive) {
+      return res.status(404).json({ success: false, message: 'Car not found or inactive' });
+    }
+
+    const entry = car.revenueEntries.id(req.params.revenueId);
+    if (!entry) {
+      return res.status(404).json({ success: false, message: 'Revenue entry not found' });
+    }
+
+    if (req.body.amount !== undefined) entry.amount = parseFloat(req.body.amount);
+    if (req.body.date) entry.date = new Date(req.body.date);
+    if (req.body.source) entry.source = req.body.source.trim();
+    if (req.body.description !== undefined) entry.description = req.body.description.trim();
+    if (req.body.tripType) entry.tripType = req.body.tripType;
+
+    await car.save();
+    res.json({ success: true, data: car, message: 'Revenue entry updated successfully' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error updating revenue entry', error: error.message });
+  }
+});
+
+// Delete revenue entry
+router.delete('/:carId/revenue/:revenueId', async (req, res) => {
+  try {
+    const car = await Car.findById(req.params.carId);
+    if (!car || !car.isActive) {
+      return res.status(404).json({ success: false, message: 'Car not found or inactive' });
+    }
+
+    const entry = car.revenueEntries.id(req.params.revenueId);
+    if (!entry) {
+      return res.status(404).json({ success: false, message: 'Revenue entry not found' });
+    }
+
+    entry.deleteOne();
+    await car.save();
+    res.json({ success: true, data: car, message: 'Revenue entry deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error deleting revenue entry', error: error.message });
+  }
+});
+
 module.exports = router;

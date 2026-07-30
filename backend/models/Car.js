@@ -28,6 +28,36 @@ const expenseSchema = new mongoose.Schema({
   timestamps: true
 });
 
+const revenueEntrySchema = new mongoose.Schema({
+  amount: {
+    type: Number,
+    required: [true, 'Amount is required'],
+    min: [0.01, 'Amount must be greater than 0']
+  },
+  date: {
+    type: Date,
+    required: [true, 'Date is required'],
+    default: Date.now
+  },
+  source: {
+    type: String,
+    required: [true, 'Source is required'],
+    trim: true
+  },
+  description: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  tripType: {
+    type: String,
+    enum: ['collection', 'transport', 'rental', 'other'],
+    default: 'collection'
+  }
+}, {
+  timestamps: true
+});
+
 const carSchema = new mongoose.Schema({
   plateNumber: {
     type: String,
@@ -49,7 +79,8 @@ const carSchema = new mongoose.Schema({
     type: Boolean,
     default: true
   },
-  expenses: [expenseSchema]
+  expenses: [expenseSchema],
+  revenueEntries: [revenueEntrySchema]
 }, {
   timestamps: true
 });

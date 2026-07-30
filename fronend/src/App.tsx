@@ -8,6 +8,7 @@ import Customers from './pages/Customers';
 import Payments from './pages/Payments';
 import Workers from './pages/Workers';
 import Cars from './pages/Cars';
+import CarRevenue from './pages/CarRevenue';
 import Reports from './pages/Reports';
 import VillageDetail from './pages/VillageDetail';
 import VillageDetails from './pages/VillageDetails';
@@ -432,6 +433,8 @@ function AppContent() {
                     refreshData={refreshData}
                   />
                 } />
+                <Route path="/car-revenue" element={<CarRevenue />} />
+
                 <Route path="/reports" element={
                   <Reports 
                     villages={villages} 

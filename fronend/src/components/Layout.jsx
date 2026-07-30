@@ -13,7 +13,8 @@ import {
   DollarSign,
   Banknote,
   Shield,
-  Home
+  Home,
+  TrendingUp
 } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
@@ -61,7 +62,8 @@ const Layout = ({ children }) => {
     { name: 'Zones', href: '/zones', icon: MapPin },
     { name: 'Village Details', href: '/village-details', icon: Home },
     { name: 'Workers', href: '/workers', icon: UserCog },
-    { name: 'Fleet', href: '/cars', icon: Car },
+    { name: 'Cars', href: '/cars', icon: Car },
+    { name: 'Car Revenue', href: '/car-revenue', icon: TrendingUp },
     { name: 'Company Expenses', href: '/company-expenses', icon: DollarSign },
     { name: 'Withdrawals', href: '/withdraws', icon: Banknote },
     { name: 'Reports', href: '/reports', icon: BarChart3 },
