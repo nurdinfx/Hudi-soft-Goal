@@ -1,11 +1,18 @@
 const getApiBaseUrl = () => {
-  const envUrl = (import.meta.env.VITE_API_URL || '').trim();
+  let envUrl = (import.meta.env.VITE_API_URL || '').trim().replace(/\/$/, '');
   const defaultUrl = 'https://gaol-backend.onrender.com/api';
 
-  // Prefer explicit env override, otherwise always hit the hosted backend.
-  if (envUrl) return envUrl;
-  return defaultUrl;
+  // If no env override, use the default
+  if (!envUrl) return defaultUrl;
+
+  // Ensure /api is appended if not already present
+  if (!envUrl.endsWith('/api')) {
+    envUrl = envUrl + '/api';
+  }
+
+  return envUrl;
 };
+
 
 const config = {
   apiBaseUrl: getApiBaseUrl(),
