@@ -103,18 +103,21 @@ const Login = () => {
           {/* Headline & Subtitle */}
           <div className="space-y-4">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.08]">
-              Manage Everything. <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-sky-500 to-indigo-600">
-                From One Powerful Platform.
+              DUR-DUR <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-cyan-500 to-indigo-600">
+                CLEAN WATER LTD.
               </span>
             </h1>
-            <p className="text-slate-600 text-base sm:text-lg max-w-xl leading-relaxed font-normal">
-              HUDI-SOFT helps schools, hospitals, restaurants, supermarkets, hotels, and businesses manage operations with speed, security, and intelligence.
+            <p className="text-slate-600 text-base sm:text-lg max-w-xl leading-relaxed font-semibold">
+              Biyo Nadiif Ah • Ammaan & Kalsooni • Adeeg Hufan
             </p>
           </div>
 
-          {/* 3 Premium Feature Pills */}
+          {/* Official Contacts Pill */}
           <div className="flex flex-wrap items-center gap-3">
+            <div className="flex items-center gap-2 bg-blue-600 text-white rounded-full px-5 py-2.5 shadow-md text-xs font-bold">
+              <span>📞 +254 748 269 584 / +254 725 727 124</span>
+            </div>
             {features.map((feat, idx) => (
               <div 
                 key={idx} 
@@ -128,123 +131,15 @@ const Login = () => {
             ))}
           </div>
 
-          {/* Multi-Device Overlapping 3D-Style Showcase */}
+          {/* Real Company Poster Showcase */}
           <div className="relative pt-2 pb-4 hidden sm:block">
-            
-            {/* Desktop / Laptop Main Monitor Mockup */}
-            <div className="relative bg-white/95 backdrop-blur-2xl border border-slate-200/90 rounded-3xl p-5 shadow-2xl shadow-blue-900/15">
-              
-              {/* Laptop Display Header */}
-              <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-rose-400" />
-                  <div className="w-3 h-3 rounded-full bg-amber-400" />
-                  <div className="w-3 h-3 rounded-full bg-emerald-400" />
-                  <span className="ml-2 text-[11px] font-extrabold text-slate-500 uppercase tracking-wide">
-                    HUDI-SOFT Multi-Industry Dashboard
-                  </span>
-                </div>
-                <div className="flex items-center gap-1.5 text-xs font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">
-                  <Activity className="w-3.5 h-3.5" />
-                  <span>AI Analytics Active</span>
-                </div>
-              </div>
-
-              {/* Mockup Dashboard Body */}
-              <div className="grid grid-cols-12 gap-3">
-                
-                {/* Stats Cards Row */}
-                <div className="col-span-12 grid grid-cols-4 gap-2 mb-1">
-                  <div className="bg-gradient-to-br from-blue-50 to-sky-50 p-2.5 rounded-xl border border-blue-100">
-                    <p className="text-[9px] font-extrabold text-slate-400 uppercase">Revenue</p>
-                    <p className="text-sm sm:text-base font-black text-blue-900 mt-0.5">$58,490</p>
-                    <span className="text-[9px] font-bold text-emerald-600">↑ +19.2%</span>
-                  </div>
-                  <div className="bg-gradient-to-br from-sky-50 to-indigo-50 p-2.5 rounded-xl border border-sky-100">
-                    <p className="text-[9px] font-extrabold text-slate-400 uppercase">Attendance</p>
-                    <p className="text-sm sm:text-base font-black text-indigo-900 mt-0.5">98.4%</p>
-                    <span className="text-[9px] font-bold text-blue-600">Optimal</span>
-                  </div>
-                  <div className="bg-gradient-to-br from-indigo-50 to-purple-50 p-2.5 rounded-xl border border-indigo-100">
-                    <p className="text-[9px] font-extrabold text-slate-400 uppercase">Orders / POS</p>
-                    <p className="text-sm sm:text-base font-black text-purple-900 mt-0.5">3,420</p>
-                    <span className="text-[9px] font-bold text-emerald-600">↑ +14.5%</span>
-                  </div>
-                  <div className="bg-gradient-to-br from-emerald-50 to-teal-50 p-2.5 rounded-xl border border-emerald-100">
-                    <p className="text-[9px] font-extrabold text-slate-400 uppercase">AI Efficiency</p>
-                    <p className="text-sm sm:text-base font-black text-emerald-900 mt-0.5">99.9%</p>
-                    <span className="text-[9px] font-bold text-emerald-600">Secured</span>
-                  </div>
-                </div>
-
-                {/* Graph Analytics View */}
-                <div className="col-span-8 bg-slate-50/80 rounded-xl p-2.5 border border-slate-100">
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-[9px] font-bold text-slate-600 uppercase">Multi-Tenant Business Performance</span>
-                    <span className="text-[9px] font-semibold text-slate-400">Live AI Stream</span>
-                  </div>
-                  <div className="h-14 w-full flex items-end gap-1 pt-1">
-                    {[40, 65, 50, 80, 70, 95, 85, 100, 90, 95, 88, 100].map((h, i) => (
-                      <div 
-                        key={i} 
-                        className="flex-1 bg-gradient-to-t from-blue-600 to-sky-400 rounded-t-xs hover:from-blue-500 hover:to-indigo-500 transition-all" 
-                        style={{ height: `${h}%` }} 
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                {/* Side Quick Tasks */}
-                <div className="col-span-4 bg-slate-50/80 rounded-xl p-2.5 border border-slate-100 flex flex-col justify-between">
-                  <p className="text-[9px] font-bold text-slate-600 uppercase">Recent AI Reports</p>
-                  <div className="space-y-1">
-                    <div className="h-1.5 bg-blue-500/40 rounded-full w-full" />
-                    <div className="h-1.5 bg-sky-400/40 rounded-full w-4/5" />
-                    <div className="h-1.5 bg-indigo-400/40 rounded-full w-2/3" />
-                  </div>
-                  <span className="text-[8px] font-bold text-emerald-600 flex items-center gap-1">
-                    <Sparkles className="w-2.5 h-2.5" /> All Operations Normal
-                  </span>
-                </div>
-
-              </div>
-
+            <div className="relative bg-white/95 backdrop-blur-2xl border border-slate-200/90 rounded-3xl p-2.5 shadow-2xl shadow-blue-900/15 overflow-hidden">
+              <img 
+                src="/company-banner.jpg" 
+                alt="DUR-DUR CLEAN WATER LTD Banner" 
+                className="w-full h-auto rounded-2xl object-cover shadow-sm"
+              />
             </div>
-
-            {/* Overlapping Floating Smartphone Mockup */}
-            <div className="absolute -bottom-5 -left-5 w-36 sm:w-44 rounded-3xl bg-slate-900 border-4 border-slate-700/80 p-2 shadow-2xl shadow-blue-950/40 z-20 transform -rotate-3 hover:rotate-0 transition-transform duration-300">
-              <div className="w-10 h-2 bg-slate-800 rounded-full mx-auto mb-1.5" />
-              <div className="bg-slate-950 rounded-xl p-2 space-y-1.5 border border-slate-800">
-                <div className="flex items-center justify-between">
-                  <span className="text-[8px] font-bold text-cyan-400">Mobile Admin</span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                </div>
-                <div className="bg-blue-600/20 rounded-lg p-1 border border-blue-500/30">
-                  <p className="text-[7px] text-slate-400">Today Sales</p>
-                  <p className="text-[11px] font-bold text-white">$4,850.00</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Floating Widget Card 1: Revenue */}
-            <div className="absolute -top-4 -right-4 bg-white/95 backdrop-blur-xl border border-slate-100 rounded-2xl p-3 shadow-xl shadow-blue-900/10 flex items-center gap-2.5 z-20">
-              <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
-                <TrendingUp className="w-4 h-4" />
-              </div>
-              <div>
-                <p className="text-[11px] font-bold text-slate-900">Revenue Growth</p>
-                <p className="text-[10px] font-bold text-emerald-600">+$12,450 This Week</p>
-              </div>
-            </div>
-
-            {/* Floating Widget Card 2: Notification */}
-            <div className="absolute bottom-1/4 -right-6 bg-white/95 backdrop-blur-xl border border-slate-100 rounded-2xl p-2.5 shadow-xl shadow-indigo-900/10 flex items-center gap-2 z-20">
-              <div className="w-7 h-7 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center">
-                <Bell className="w-3.5 h-3.5" />
-              </div>
-              <span className="text-[10px] font-bold text-slate-700">Invoice #9402 Paid</span>
-            </div>
-
           </div>
 
           {/* Trust Statistics Bar */}
