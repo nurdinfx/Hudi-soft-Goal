@@ -19,6 +19,7 @@ import Users from './pages/Users';
 import Login from './pages/Login';
 import { Toaster } from 'react-hot-toast';
 import { apiService } from './services/api';
+import InstallPwaPrompt from './components/InstallPwaPrompt';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
@@ -484,6 +485,7 @@ function App() {
     <AuthProvider>
       <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <AppContent />
+        <InstallPwaPrompt />
         <Toaster position="top-right" />
       </Router>
     </AuthProvider>

@@ -1508,8 +1508,8 @@ const Customers = () => {
                     <div className="text-center mb-1 border-b border-gray-300 pb-0.5">
                       <h1 className="text-xl font-bold text-gray-900 uppercase tracking-wide">
                         {printData.zoneName
-                          ? `${printData.zoneName} - SHIRKADA NADAAFADA EE GOOL`
-                          : 'SHIRKADA NADAAFADA EE GOOL'}
+                          ? `${printData.zoneName} - DUR-DUR CLEAN WATER`
+                          : 'DUR-DUR CLEAN WATER'}
                       </h1>
                       <p className="text-[9px] font-semibold text-gray-700 my-0.5">powered by HUDI SOMPROJECT</p>
                       <div className="flex justify-between items-end px-2">

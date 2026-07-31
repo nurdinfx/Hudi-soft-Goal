@@ -14,7 +14,10 @@ import {
   Banknote,
   Shield,
   Home,
-  TrendingUp
+  TrendingUp,
+  Droplets,
+  Download,
+  Smartphone
 } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
@@ -27,6 +30,11 @@ const Layout = ({ children }) => {
   const handleLogout = () => {
     logout();
     navigate('/login');
+  };
+
+  const handleTriggerInstall = () => {
+    setSidebarOpen(false);
+    window.dispatchEvent(new CustomEvent('openPwaInstallModal'));
   };
 
   // Safe user data access - Define these before using them
@@ -88,10 +96,10 @@ const Layout = ({ children }) => {
           
           <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
             <div className="flex-shrink-0 flex items-center px-4">
-              <div className="h-8 w-8 bg-white rounded-lg flex items-center justify-center">
-                <span className="text-blue-700 font-bold text-sm">GC</span>
+              <div className="h-9 w-9 bg-white rounded-xl flex items-center justify-center shadow-md">
+                <Droplets className="text-blue-600 h-5 w-5" />
               </div>
-              <span className="ml-3 text-xl font-bold text-white">SHIRKADA GAOL</span>
+              <span className="ml-3 text-lg font-extrabold text-white tracking-tight">DUR-DUR CLEAN WATER</span>
             </div>
             <nav className="mt-5 px-2 space-y-1">
               {navigation.map((item) => {
@@ -114,6 +122,13 @@ const Layout = ({ children }) => {
                   </Link>
                 );
               })}
+              <button
+                onClick={handleTriggerInstall}
+                className="w-full mt-2 group flex items-center px-2 py-2 text-base font-medium rounded-md text-cyan-200 bg-blue-800/60 hover:bg-blue-600 hover:text-white transition-colors"
+              >
+                <Smartphone className="mr-4 flex-shrink-0 h-6 w-6 text-cyan-300 group-hover:text-white" />
+                <span>Install Mobile App</span>
+              </button>
             </nav>
           </div>
           
@@ -147,10 +162,10 @@ const Layout = ({ children }) => {
         <div className="flex-1 flex flex-col min-h-0 border-r border-blue-600 bg-blue-700">
           <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
             <div className="flex items-center flex-shrink-0 px-4">
-              <div className="h-8 w-8 bg-white rounded-lg flex items-center justify-center">
-                <span className="text-blue-700 font-bold text-sm">GC</span>
+              <div className="h-9 w-9 bg-white rounded-xl flex items-center justify-center shadow-md">
+                <Droplets className="text-blue-600 h-5 w-5" />
               </div>
-              <span className="ml-3 text-xl font-bold text-white">SHIRKADA GAOL</span>
+              <span className="ml-3 text-lg font-extrabold text-white tracking-tight">DUR-DUR CLEAN WATER</span>
             </div>
             <nav className="mt-5 flex-1 px-2 bg-blue-700 space-y-1">
               {navigation.map((item) => {
@@ -172,6 +187,13 @@ const Layout = ({ children }) => {
                   </Link>
                 );
               })}
+              <button
+                onClick={handleTriggerInstall}
+                className="w-full mt-3 group flex items-center px-2 py-2 text-sm font-medium rounded-md text-cyan-200 bg-blue-800/60 hover:bg-blue-600 hover:text-white transition-colors"
+              >
+                <Smartphone className="mr-3 flex-shrink-0 h-5 w-5 text-cyan-300 group-hover:text-white" />
+                <span>Install Mobile App</span>
+              </button>
             </nav>
           </div>
           

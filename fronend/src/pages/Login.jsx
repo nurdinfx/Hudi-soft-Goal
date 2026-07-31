@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { 
   Eye, EyeOff, Loader, User, Lock, ArrowRight, TrendingUp, 
   ShieldCheck, Sparkles, Zap, Check, Users, Server, Clock, 
-  Building2, CreditCard, Activity, Bell, ChevronRight
+  Building2, CreditCard, Activity, Bell, ChevronRight, Droplets
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -88,14 +88,14 @@ const Login = () => {
           {/* Brand Logo Header */}
           <div className="flex items-center gap-3">
             <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-600 via-sky-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/25">
-              <span className="text-white font-black text-xl tracking-wider">HS</span>
+              <Droplets className="text-white w-6 h-6" />
             </div>
             <div>
               <h2 className="text-xl font-black tracking-tight text-slate-900 leading-none">
-                HUDI-SOFT <span className="text-blue-600">SYSTEMS</span>
+                DUR-DUR <span className="text-blue-600">CLEAN WATER</span>
               </h2>
               <p className="text-[11px] font-bold tracking-widest text-sky-600 uppercase mt-0.5">
-                Enterprise Operating System
+                Water Cargo & Customer Platform
               </p>
             </div>
           </div>
@@ -275,14 +275,14 @@ const Login = () => {
               {/* Header Title & Subtitle */}
               <div className="text-center space-y-2">
                 <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-600 via-sky-500 to-indigo-600 shadow-xl shadow-blue-500/25 mb-1">
-                  <span className="text-white font-black text-2xl tracking-wider">HS</span>
+                  <Droplets className="text-white w-8 h-8" />
                 </div>
 
                 <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                   Welcome Back
                 </h2>
                 <p className="text-slate-500 text-xs sm:text-sm font-medium">
-                  Access all your HUDI-SOFT applications from one secure platform.
+                  Access your DUR-DUR CLEAN WATER portal securely.
                 </p>
               </div>
 
