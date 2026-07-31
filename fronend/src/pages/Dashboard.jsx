@@ -65,6 +65,7 @@ const useRealtimeData = (selectedMonth) => {
     customers: [],
     villages: [],
     workers: [],
+    cars: [],
     loading: true,
     lastUpdated: null,
     error: null
@@ -74,24 +75,26 @@ const useRealtimeData = (selectedMonth) => {
     try {
       setData(prev => ({ ...prev, loading: true, error: null }));
 
-
-      const [customersResponse, villagesResponse, workersResponse] = await Promise.all([
+      const [customersResponse, villagesResponse, workersResponse, carsResponse] = await Promise.all([
         apiService.getCustomers(),
         apiService.getVillages(),
-        apiService.getWorkers()
+        apiService.getWorkers(),
+        apiService.getCars().catch(() => [])
       ]);
 
       // Handle different response formats
       const customersData = Array.isArray(customersResponse) ? customersResponse : (customersResponse?.data || []);
       const villagesData = Array.isArray(villagesResponse) ? villagesResponse : (villagesResponse?.data || []);
       const workersData = Array.isArray(workersResponse) ? workersResponse : (workersResponse?.data || []);
+      const carsData = Array.isArray(carsResponse) ? carsResponse : (carsResponse?.data || carsResponse?.cars || []);
 
-      console.log(`📊 Data loaded: ${customersData.length} customers, ${villagesData.length} villages, ${workersData.length} workers`);
+      console.log(`📊 Data loaded: ${customersData.length} customers, ${villagesData.length} villages, ${workersData.length} workers, ${carsData.length} cars`);
 
       const newData = {
         customers: customersData,
         villages: villagesData,
         workers: workersData,
+        cars: carsData,
         loading: false,
         lastUpdated: new Date(),
         error: null
@@ -105,6 +108,7 @@ const useRealtimeData = (selectedMonth) => {
         customers: [],
         villages: [],
         workers: [],
+        cars: [],
         loading: false,
         lastUpdated: new Date(),
         error: error.message
@@ -167,7 +171,7 @@ const Dashboard = () => {
 
 
 
-  const { customers, villages, workers, loading, lastUpdated, error, refetch } = useRealtimeData(selectedMonth);
+  const { customers, villages, workers, cars, loading, lastUpdated, error, refetch } = useRealtimeData(selectedMonth);
 
   // Update available months when customers data changes
   useEffect(() => {
@@ -178,7 +182,6 @@ const Dashboard = () => {
 
       setAvailableMonths(allMonths);
 
-
       // Auto-select the most recent month if current selection is not in available months
       if (!allMonths.includes(selectedMonth)) {
         setSelectedMonth(allMonths[0]);
@@ -186,7 +189,7 @@ const Dashboard = () => {
     }
   }, [customers, selectedMonth]);
 
-  // Calculate derived stats - IMPROVED
+  // Calculate derived stats - includes Customer payments + Car Revenues
   const stats = React.useMemo(() => {
     const totalCustomers = customers.length;
 
@@ -197,22 +200,46 @@ const Dashboard = () => {
     const paidCustomers = paymentData.filter(payment => payment.fullyPaid).length;
     const unpaidCustomers = totalCustomers - paidCustomers;
 
+    const customerRevenue = paymentData.reduce((sum, payment) => sum + payment.paid, 0);
 
-    const totalRevenue = paymentData.reduce((sum, payment) => sum + payment.paid, 0);
+    // Car revenue: sum of all revenue entries for cars (all-time, not filtered by month for simplicity)
+    const carRevenue = cars.reduce((sum, car) => {
+      const rev = (car.revenueEntries || []).reduce((s, e) => s + (Number(e.amount) || 0), 0);
+      return sum + rev;
+    }, 0);
+
+    // Monthly car revenue (filter by selected month YYYY-MM)
+    const monthlyCarRevenue = cars.reduce((sum, car) => {
+      const rev = (car.revenueEntries || [])
+        .filter(e => {
+          if (!e.date) return false;
+          const d = new Date(e.date);
+          const entryMonth = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+          return entryMonth === selectedMonth;
+        })
+        .reduce((s, e) => s + (Number(e.amount) || 0), 0);
+      return sum + rev;
+    }, 0);
+
+    const totalRevenue = customerRevenue + monthlyCarRevenue;
     const totalDue = customers.reduce((sum, customer) => sum + (Number(customer.monthlyFee) || 0), 0);
-    const collectionRate = totalDue > 0 ? (totalRevenue / totalDue) * 100 : 0;
+    const collectionRate = (customerRevenue + monthlyCarRevenue) > 0 ? 
+      (customerRevenue / Math.max(totalDue, 1)) * 100 : 0;
 
     return {
       totalCustomers,
       totalVillages: villages.length,
       totalWorkers: workers.length,
+      totalCars: cars.length,
       paidCustomers,
       unpaidCustomers,
+      customerRevenue,
+      monthlyCarRevenue,
       totalRevenue,
       totalDue,
       collectionRate
     };
-  }, [customers, villages, workers, selectedMonth]);
+  }, [customers, villages, workers, cars, selectedMonth]);
 
   // Calculate village statistics - IMPROVED
   const villageStats = React.useMemo(() => {
@@ -309,7 +336,7 @@ const Dashboard = () => {
 
           </div>
           <p className="text-gray-600 mt-1 md:mt-2 text-sm md:text-base">
-            Overview of your garbage collection business - {getMonthName(selectedMonth)}
+            Overview of your water cargo business - {getMonthName(selectedMonth)}
           </p>
           {lastUpdated && (
             <p className="text-xs text-gray-500 mt-1">
@@ -365,7 +392,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Total Revenue */}
+        {/* Total Revenue (Customer + Car) */}
         <div className="bg-white p-4 md:p-6 rounded-xl shadow-sm border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
@@ -376,15 +403,22 @@ const Dashboard = () => {
               <DollarSign className="w-5 h-5 md:w-6 md:h-6 text-green-600" />
             </div>
           </div>
-          <div className="mt-3 md:mt-4">
-            <div className="flex justify-between text-xs md:text-sm text-gray-600">
+          <div className="mt-3 md:mt-4 space-y-1">
+            <div className="flex justify-between text-xs text-gray-500">
+              <span>Customer Payments</span>
+              <span className="font-medium text-blue-600">{formatCurrency(stats.customerRevenue)}</span>
+            </div>
+            <div className="flex justify-between text-xs text-gray-500">
+              <span>Car Revenue</span>
+              <span className="font-medium text-emerald-600">{formatCurrency(stats.monthlyCarRevenue)}</span>
+            </div>
+            <div className="flex justify-between text-xs md:text-sm text-gray-600 pt-1 border-t border-gray-100">
               <span>Collection Rate</span>
               <span className="font-semibold">{stats.collectionRate.toFixed(1)}%</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-1.5 md:h-2 mt-1">
               <div
                 className="bg-green-500 h-1.5 md:h-2 rounded-full transition-all duration-500"
-
                 style={{ width: `${Math.min(stats.collectionRate, 100)}%` }}
               ></div>
             </div>

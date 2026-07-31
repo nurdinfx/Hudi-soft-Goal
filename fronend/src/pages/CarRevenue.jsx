@@ -9,7 +9,7 @@ import config from '../config/env';
 const API_BASE_URL = config.apiBaseUrl;
 
 const TRIP_TYPES = [
-  { value: 'collection', label: 'Garbage Collection', color: '#10b981', bg: '#d1fae5' },
+  { value: 'collection', label: 'Water Cargo Delivery', color: '#10b981', bg: '#d1fae5' },
   { value: 'transport', label: 'Transport', color: '#3b82f6', bg: '#dbeafe' },
   { value: 'rental', label: 'Rental', color: '#8b5cf6', bg: '#ede9fe' },
   { value: 'other', label: 'Other', color: '#f59e0b', bg: '#fef3c7' },

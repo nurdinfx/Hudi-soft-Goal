@@ -39,7 +39,8 @@ const monthlyPaymentSchema = new mongoose.Schema({
   },
   monthlyFee: {
     type: Number,
-    required: true
+    required: false,
+    default: 0
   },
   previousBalance: {
     type: Number,
@@ -92,7 +93,7 @@ const customerSchema = new mongoose.Schema({
   },
   monthlyFee: {
     type: Number,
-    required: true,
+    required: false,
     default: 0
   },
   status: {

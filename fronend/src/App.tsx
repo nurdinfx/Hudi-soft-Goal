@@ -12,6 +12,7 @@ import CarRevenue from './pages/CarRevenue';
 import Reports from './pages/Reports';
 import VillageDetail from './pages/VillageDetail';
 import VillageDetails from './pages/VillageDetails';
+import CustomerDetails from './pages/CustomerDetails';
 import CompanyExpenses from './pages/CompanyExpenses';
 import Withdraws from './pages/Withdraws';
 import Users from './pages/Users';
@@ -402,7 +403,8 @@ function AppContent() {
                   />
                 } />
                 <Route path="/village/:idOrName" element={<VillageDetail />} />
-                <Route path="/village-details" element={<VillageDetails />} />
+                <Route path="/customer-details" element={<CustomerDetails />} />
+                <Route path="/village-details" element={<CustomerDetails />} />
                 <Route path="/payments" element={
                   <Payments 
                     villages={villages} 

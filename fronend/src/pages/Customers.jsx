@@ -43,6 +43,8 @@ const Customers = () => {
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [paymentAmount, setPaymentAmount] = useState('');
   const [actionLoading, setActionLoading] = useState(null);
+  const [cars, setCars] = useState([]);
+  const [selectedCarId, setSelectedCarId] = useState('');
   const [currentPrintPage, setCurrentPrintPage] = useState(1);
   const getSelectedMonthRealDate = () => {
     const dates = [];
@@ -327,19 +329,25 @@ const Customers = () => {
   const loadData = async () => {
     try {
       setLoading(true);
-      const [customersResponse, zonesResponse] = await Promise.all([
+      const [customersResponse, zonesResponse, carsResponse] = await Promise.all([
         apiRequest('/customers'),
-        apiRequest('/zones')
+        apiRequest('/zones'),
+        apiRequest('/cars').catch(() => ([]))
       ]);
 
       // Ensure we have proper array data
       const customersData = Array.isArray(customersResponse) ? customersResponse : (customersResponse.data || []);
       const zonesData = Array.isArray(zonesResponse) ? zonesResponse : (zonesResponse.data || []);
+      const carsData = Array.isArray(carsResponse) ? carsResponse : (carsResponse.data || carsResponse.cars || []);
 
       setCustomers(customersData);
       setZones(zonesData);
+      setCars(carsData);
+      if (carsData.length > 0 && !selectedCarId) {
+        setSelectedCarId(carsData[0]._id);
+      }
 
-      console.log(`✅ Loaded ${customersData.length} customers and ${zonesData.length} zones`);
+      console.log(`✅ Loaded ${customersData.length} customers, ${zonesData.length} zones, ${carsData.length} cars`);
 
     } catch (error) {
       console.error('Error loading data:', error);
@@ -479,6 +487,24 @@ const Customers = () => {
 
       const updatedCustomer = response.data || response;
 
+      // Automatically record revenue to selected car if specified
+      if (selectedCarId) {
+        try {
+          await apiRequest(`/cars/${selectedCarId}/revenue`, {
+            method: 'POST',
+            body: JSON.stringify({
+              amount: amount,
+              date: new Date().toISOString(),
+              source: `Customer: ${customer.fullName}`,
+              description: `Water cargo payment from ${customer.fullName} (${customer.address || ''})`,
+              tripType: 'collection'
+            })
+          });
+        } catch (carRevError) {
+          console.error('Error auto-adding car revenue entry:', carRevError);
+        }
+      }
+
       // Update local state
       setCustomers(prev => prev.map(c =>
         c._id === customer._id ? updatedCustomer : c
@@ -488,7 +514,7 @@ const Customers = () => {
       setSelectedCustomer(null);
       setPaymentAmount('');
       await loadData(); // Reload to get updated calculations
-      alert(`Payment of $${amount} processed successfully for ${new Date(selectedMonth + '-01').toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}!`);
+      alert(`Payment of $${amount} processed successfully! ${selectedCarId ? 'Car revenue entry recorded.' : ''}`);
     } catch (error) {
       console.error('Error processing payment:', error);
       const errorMessage = error.response?.data?.error || error.response?.data?.message || error.message || 'Unknown error';
@@ -527,6 +553,24 @@ const Customers = () => {
           method: 'cash'
         })
       });
+
+      // If marked paid, automatically add revenue entry for selected car
+      if (newFullyPaid && paid > 0 && selectedCarId) {
+        try {
+          await apiRequest(`/cars/${selectedCarId}/revenue`, {
+            method: 'POST',
+            body: JSON.stringify({
+              amount: paid,
+              date: new Date().toISOString(),
+              source: `Customer: ${customer.fullName}`,
+              description: `Water cargo payment from ${customer.fullName} (${customer.address || ''})`,
+              tripType: 'collection'
+            })
+          });
+        } catch (carRevError) {
+          console.error('Error auto-adding car revenue entry on toggle:', carRevError);
+        }
+      }
 
       // Reload data to get updated calculations
       await loadData();
@@ -616,7 +660,7 @@ const Customers = () => {
       phoneNumber: formData.get('phoneNumber'),
       address: formData.get('address'),
       zoneId: formData.get('zoneId'),
-      monthlyFee: parseFloat(formData.get('monthlyFee'))
+      monthlyFee: parseFloat(formData.get('monthlyFee')) || 0
     };
 
     try {
@@ -1640,6 +1684,24 @@ const Customers = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Select Water Cargo Car (Add to Car Revenue)
+                </label>
+                <select
+                  value={selectedCarId}
+                  onChange={(e) => setSelectedCarId(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">No Car (Customer Payment Only)</option>
+                  {cars.map(car => (
+                    <option key={car._id} value={car._id}>
+                      🚗 {car.plateNumber} ({car.carType})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
                   Payment Amount ($)
                 </label>
                 <input
@@ -1757,21 +1819,6 @@ const Customers = () => {
                 <p className="text-xs text-gray-500 mt-1">
                   Zone includes village information and collection day
                 </p>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Monthly Fee ($) *
-                </label>
-                <input
-                  type="number"
-                  name="monthlyFee"
-                  required
-                  min="0"
-                  step="0.01"
-                  defaultValue={editingCustomer?.monthlyFee}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Monthly fee amount"
-                />
               </div>
               <div className="flex justify-end space-x-3 pt-4">
                 <button

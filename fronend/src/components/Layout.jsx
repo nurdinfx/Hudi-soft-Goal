@@ -60,7 +60,7 @@ const Layout = ({ children }) => {
     { name: 'Dashboard', href: '/', icon: LayoutDashboard },
     { name: 'Customers', href: '/customers', icon: UsersIcon },
     { name: 'Zones', href: '/zones', icon: MapPin },
-    { name: 'Village Details', href: '/village-details', icon: Home },
+    { name: 'Customer Details', href: '/customer-details', icon: UsersIcon },
     { name: 'Workers', href: '/workers', icon: UserCog },
     { name: 'Cars', href: '/cars', icon: Car },
     { name: 'Car Revenue', href: '/car-revenue', icon: TrendingUp },

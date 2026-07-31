@@ -451,12 +451,30 @@ const Reports = ({
         };
       });
 
-      // Cars and maintenance report
-      const carsReport = cars.map(car => {
+      // Car revenue per car (monthly)
+      const carsReportEnhanced = cars.map(car => {
         const totalExpenses = car.expenses?.reduce((sum, expense) => sum + (expense.amount || 0), 0) || 0;
         const maintenanceExpenses = car.expenses?.filter(e => e.type === 'maintenance').reduce((sum, e) => sum + e.amount, 0) || 0;
         const fuelExpenses = car.expenses?.filter(e => e.type === 'fuel').reduce((sum, e) => sum + e.amount, 0) || 0;
 
+        // Filter revenue entries for selected month
+        const monthlyRevEntries = (car.revenueEntries || []).filter(e => {
+          if (!e.date) return false;
+          const d = new Date(e.date);
+          const entryMonth = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+          return entryMonth === filters.month;
+        });
+        const monthlyCarRevenue = monthlyRevEntries.reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
+        const totalCarRevenue = (car.revenueEntries || []).reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
+
+        // Filter expenses for selected month
+        const monthlyCarExpenses = (car.expenses || []).filter(e => {
+          if (!e.expenseDate) return false;
+          const d = new Date(e.expenseDate);
+          const entryMonth = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+          return entryMonth === filters.month;
+        });
+        const monthlyCarExpenseAmount = monthlyCarExpenses.reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
 
         return {
           carId: car._id,
@@ -467,32 +485,41 @@ const Reports = ({
           maintenanceExpenses,
           fuelExpenses,
           expenseCount: car.expenses?.length || 0,
+          monthlyCarRevenue,
+          totalCarRevenue,
+          monthlyCarExpenseAmount,
+          revenueEntries: monthlyRevEntries,
           lastMaintenance: car.expenses?.filter(e => e.type === 'maintenance').sort((a, b) => new Date(b.expenseDate) - new Date(a.expenseDate))[0]?.expenseDate || 'Never'
         };
       });
 
+      // Aggregate car revenue for the month
+      const totalMonthlyCarRevenue = carsReportEnhanced.reduce((sum, c) => sum + c.monthlyCarRevenue, 0);
+      const totalMonthlyCarExpenses = carsReportEnhanced.reduce((sum, c) => sum + c.monthlyCarExpenseAmount, 0);
+
       // Withdrawals report
       const monthlyWithdrawals = withdrawals.filter(withdrawal => {
-        const withdrawDate = new Date(withdrawal.withdrawDate);
+        const wDate = withdrawal.withdrawDate || withdrawal.date || withdrawal.createdAt;
+        if (!wDate) return true; // include if no date
+        const withdrawDate = new Date(wDate);
         const filterDate = new Date(filters.month + '-01');
         return withdrawDate.getMonth() === filterDate.getMonth() &&
           withdrawDate.getFullYear() === filterDate.getFullYear();
-
       });
 
       const withdrawalsByCategory = monthlyWithdrawals.reduce((acc, withdrawal) => {
-        acc[withdrawal.category] = (acc[withdrawal.category] || 0) + withdrawal.amount;
+        const cat = withdrawal.category || 'other';
+        acc[cat] = (acc[cat] || 0) + (withdrawal.amount || 0);
         return acc;
       }, {});
 
       // Risk assessment
       const riskAssessment = {
-        highRiskVillages: villageBreakdownByZone.zones.flatMap(zone =>
-
+        highRiskVillages: (villageBreakdownByZone.zones || []).flatMap(zone =>
           zone.villages.filter(v => v.collectionRate < 50)
         ),
         lowPerformanceWorkers: workerPerformance.filter(w => w.collectionRate < 60),
-        overdueMaintenance: carsReport.filter(c => {
+        overdueMaintenance: carsReportEnhanced.filter(c => {
           const lastMaintenance = c.lastMaintenance;
           if (lastMaintenance === 'Never') return true;
           const lastMaintenanceDate = new Date(lastMaintenance);
@@ -501,6 +528,16 @@ const Reports = ({
           return lastMaintenanceDate < sixMonthsAgo;
         })
       };
+
+      // Total income = customer payments + car revenues for the month
+      const totalIncome = totalCollected + totalMonthlyCarRevenue;
+
+      // Total all expenses
+      const totalCompanyExpenses = monthlyExpenses.reduce((sum, exp) => sum + (exp.amount || 0), 0);
+      const totalWithdrawalsAmount = monthlyWithdrawals.reduce((sum, w) => sum + (w.amount || 0), 0);
+      const totalAllExpenses = totalCompanyExpenses + totalMonthlyCarExpenses + totalWithdrawalsAmount;
+
+      const netProfit = totalIncome - totalAllExpenses;
 
       const reportData = {
         summary: {
@@ -515,27 +552,29 @@ const Reports = ({
           totalWorkers: filteredWorkers.length,
           totalZones: zones.length,
           collectionRate: filteredCustomers.length > 0 ?
-
             (paidCustomers.length / filteredCustomers.length) * 100 : 0,
-          totalExpenses: monthlyExpenses.reduce((sum, exp) => sum + exp.amount, 0),
-          totalWithdrawals: monthlyWithdrawals.reduce((sum, w) => sum + w.amount, 0),
-          netProfit: totalCollected - monthlyExpenses.reduce((sum, exp) => sum + exp.amount, 0),
-          carExpenses: carsReport.reduce((sum, car) => sum + car.totalExpenses, 0)
+          totalExpenses: totalCompanyExpenses,
+          totalWithdrawals: totalWithdrawalsAmount,
+          carRevenue: totalMonthlyCarRevenue,
+          carExpenses: totalMonthlyCarExpenses,
+          totalIncome,
+          totalAllExpenses,
+          netProfit: netProfit
         },
         villageBreakdownByZone,
         workerPerformance,
         customerDetails,
         zonePerformance,
-        cars: carsReport,
+        cars: carsReportEnhanced,
         withdrawals: {
           monthly: monthlyWithdrawals,
           byCategory: withdrawalsByCategory,
-          total: monthlyWithdrawals.reduce((sum, w) => sum + w.amount, 0)
+          total: totalWithdrawalsAmount
         },
         expenses: {
           monthly: monthlyExpenses,
           byType: expensesByType,
-          total: monthlyExpenses.reduce((sum, exp) => sum + exp.amount, 0)
+          total: totalCompanyExpenses
         },
         riskAssessment,
         period: filters.month,
@@ -916,27 +955,41 @@ const Reports = ({
                   <div className="grid grid-cols-2 gap-4">
                     <div className="text-center p-4 bg-green-50 rounded-lg">
                       <DollarSign className="w-8 h-8 text-green-600 mx-auto mb-2" />
-                      <div className="text-2xl font-bold text-green-600">${reportData.summary.totalCollected.toLocaleString()}</div>
-                      <div className="text-sm text-green-800">Revenue Collected</div>
+                      <div className="text-2xl font-bold text-green-600">${(reportData.summary.totalIncome || reportData.summary.totalCollected).toLocaleString()}</div>
+                      <div className="text-sm text-green-800">Total Income</div>
                     </div>
                     <div className="text-center p-4 bg-red-50 rounded-lg">
                       <DollarSign className="w-8 h-8 text-red-600 mx-auto mb-2" />
-                      <div className="text-2xl font-bold text-red-600">${reportData.summary.totalUnpaid.toLocaleString()}</div>
-                      <div className="text-sm text-red-800">Outstanding</div>
+                      <div className="text-2xl font-bold text-red-600">${(reportData.summary.totalAllExpenses || reportData.expenses.total).toLocaleString()}</div>
+                      <div className="text-sm text-red-800">Total Expenses</div>
                     </div>
                   </div>
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span>Total Expenses:</span>
-                      <span className="font-semibold">${reportData.expenses.total.toLocaleString()}</span>
+                  <div className="space-y-2 pt-2 border-t border-gray-100 text-sm">
+                    <div className="flex justify-between text-gray-600">
+                      <span>Customer Revenue:</span>
+                      <span className="font-semibold text-gray-900">${reportData.summary.totalCollected.toLocaleString()}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span>Car Maintenance:</span>
-                      <span className="font-semibold">${reportData.summary.carExpenses.toLocaleString()}</span>
+                    <div className="flex justify-between text-gray-600">
+                      <span>Car Revenue:</span>
+                      <span className="font-semibold text-emerald-600">${(reportData.summary.carRevenue || 0).toLocaleString()}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span>Withdrawals:</span>
-                      <span className="font-semibold">${reportData.withdrawals.total.toLocaleString()}</span>
+                    <div className="flex justify-between text-gray-600">
+                      <span>General Expenses:</span>
+                      <span className="font-semibold text-gray-900">${reportData.expenses.total.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between text-gray-600">
+                      <span>Car Expenses:</span>
+                      <span className="font-semibold text-gray-900">${(reportData.summary.carExpenses || 0).toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between text-gray-600">
+                      <span>Owner Withdrawals:</span>
+                      <span className="font-semibold text-gray-900">${reportData.withdrawals.total.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between text-base font-bold pt-2 border-t border-gray-200">
+                      <span>Net Profit:</span>
+                      <span className={reportData.summary.netProfit >= 0 ? 'text-purple-600' : 'text-red-600'}>
+                        ${reportData.summary.netProfit.toLocaleString()}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -1051,6 +1104,60 @@ const Reports = ({
                     </div>
                   </div>
                 ))}
+              </div>
+            </div>
+          )}
+
+          {/* Cars & Maintenance Report */}
+          {filters.reportType === 'cars' && (
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 no-print">
+              <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                <h2 className="text-xl font-semibold text-gray-900">
+                  Cars Revenue & Maintenance Report - {new Date(filters.month + '-01').toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                </h2>
+              </div>
+              <div className="p-6">
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Plate Number</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type / Status</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Monthly Revenue</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Monthly Expenses</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Net Car Income</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Maintenance</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {reportData.cars.map((car) => {
+                        const netCarInc = (car.monthlyCarRevenue || 0) - (car.monthlyCarExpenseAmount || 0);
+                        return (
+                          <tr key={car.carId} className="hover:bg-gray-50">
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
+                              {car.plateNumber}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                              <span className="capitalize">{car.carType}</span> • <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 capitalize">{car.status}</span>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">
+                              ${(car.monthlyCarRevenue || 0).toLocaleString()}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600 font-medium">
+                              ${(car.monthlyCarExpenseAmount || 0).toLocaleString()}
+                            </td>
+                            <td className={`px-6 py-4 whitespace-nowrap text-sm font-bold ${netCarInc >= 0 ? 'text-purple-600' : 'text-red-600'}`}>
+                              ${netCarInc.toLocaleString()}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                              {car.lastMaintenance}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           )}
