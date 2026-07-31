@@ -94,12 +94,12 @@ const Layout = ({ children }) => {
             </button>
           </div>
           
-          <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
-            <div className="flex-shrink-0 flex items-center px-4">
-              <div className="h-9 w-9 bg-white rounded-xl flex items-center justify-center shadow-md p-1">
-                <img src="/logo.png" alt="DUR-DUR Logo" className="h-full w-full object-contain" />
+          <div className="flex-1 h-0 pt-4 pb-4 overflow-y-auto">
+            <div className="flex-shrink-0 px-3 mb-4">
+              <div className="bg-white rounded-2xl p-2 shadow-lg border border-blue-400 flex flex-col items-center justify-center">
+                <img src="/company-banner.png" alt="DUR-DUR CLEAN WATER LTD" className="w-full h-auto max-h-20 object-contain rounded-xl" />
+                <span className="mt-1.5 text-xs font-black text-blue-900 tracking-wider uppercase">DUR-DUR CLEAN WATER LTD</span>
               </div>
-              <span className="ml-3 text-lg font-extrabold text-white tracking-tight">DUR-DUR CLEAN WATER</span>
             </div>
             <nav className="mt-5 px-2 space-y-1">
               {navigation.map((item) => {
@@ -124,9 +124,9 @@ const Layout = ({ children }) => {
               })}
               <button
                 onClick={handleTriggerInstall}
-                className="w-full mt-2 group flex items-center px-2 py-2 text-base font-medium rounded-md text-cyan-200 bg-blue-800/60 hover:bg-blue-600 hover:text-white transition-colors"
+                className="w-full mt-2 group flex items-center px-2.5 py-2 text-base font-semibold rounded-xl text-cyan-100 bg-blue-800/80 hover:bg-blue-600 hover:text-white transition-all shadow-sm"
               >
-                <Smartphone className="mr-4 flex-shrink-0 h-6 w-6 text-cyan-300 group-hover:text-white" />
+                <img src="/icon-192.png" alt="App Icon" className="mr-3 h-6 w-6 rounded-md object-contain bg-white p-0.5" />
                 <span>Install Mobile App</span>
               </button>
             </nav>
@@ -160,12 +160,12 @@ const Layout = ({ children }) => {
       {/* Desktop sidebar */}
       <div className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 md:z-30">
         <div className="flex-1 flex flex-col min-h-0 border-r border-blue-600 bg-blue-700">
-          <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
-            <div className="flex items-center flex-shrink-0 px-4">
-              <div className="h-9 w-9 bg-white rounded-xl flex items-center justify-center shadow-md p-1">
-                <img src="/logo.png" alt="DUR-DUR Logo" className="h-full w-full object-contain" />
+          <div className="flex-1 flex flex-col pt-4 pb-4 overflow-y-auto">
+            <div className="flex-shrink-0 px-3 mb-2">
+              <div className="bg-white rounded-2xl p-2.5 shadow-lg border border-blue-400 flex flex-col items-center justify-center">
+                <img src="/company-banner.png" alt="DUR-DUR CLEAN WATER LTD" className="w-full h-auto max-h-24 object-contain rounded-xl" />
+                <span className="mt-2 text-[11px] font-black text-blue-900 tracking-widest uppercase">DUR-DUR CLEAN WATER LTD</span>
               </div>
-              <span className="ml-3 text-lg font-extrabold text-white tracking-tight">DUR-DUR CLEAN WATER</span>
             </div>
             <nav className="mt-5 flex-1 px-2 bg-blue-700 space-y-1">
               {navigation.map((item) => {
@@ -189,9 +189,9 @@ const Layout = ({ children }) => {
               })}
               <button
                 onClick={handleTriggerInstall}
-                className="w-full mt-3 group flex items-center px-2 py-2 text-sm font-medium rounded-md text-cyan-200 bg-blue-800/60 hover:bg-blue-600 hover:text-white transition-colors"
+                className="w-full mt-3 group flex items-center px-2.5 py-2 text-sm font-semibold rounded-xl text-cyan-100 bg-blue-800/80 hover:bg-blue-600 hover:text-white transition-all shadow-sm"
               >
-                <Smartphone className="mr-3 flex-shrink-0 h-5 w-5 text-cyan-300 group-hover:text-white" />
+                <img src="/icon-192.png" alt="App Icon" className="mr-3 h-5 w-5 rounded-md object-contain bg-white p-0.5" />
                 <span>Install Mobile App</span>
               </button>
             </nav>

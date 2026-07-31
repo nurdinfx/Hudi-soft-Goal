@@ -1,4 +1,4 @@
-const CACHE_NAME = 'durdur-water-v1';
+const CACHE_NAME = 'durdur-water-v2';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
