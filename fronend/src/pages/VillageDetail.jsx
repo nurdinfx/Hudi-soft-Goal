@@ -4,7 +4,7 @@ import { apiService } from '../services/api';
 import { Printer, ArrowLeft, Calendar, Home, DollarSign, Edit3, Trash2, Users, TrendingUp } from 'lucide-react';
 import VillageRecordForm from '../components/VillageRecordForm';
 
-const formatCurrency = (amount) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount || 0);
+const formatCurrency = (amount) => 'KSh ' + Number(amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const formatDate = (d) => {
   if (!d) return '';
   if (/^\d{4}-\d{2}-\d{2}$/.test(String(d))) {

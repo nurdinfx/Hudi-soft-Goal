@@ -77,10 +77,7 @@ export default function VillageRecordForm({ villageId, villageName, serverNow, o
   };
 
   const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-US', { 
-      style: 'currency', 
-      currency: 'USD' 
-    }).format(amount || 0);
+    return 'KSh ' + Number(amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
   // Calculate projected total with current input
@@ -135,7 +132,7 @@ export default function VillageRecordForm({ villageId, villageName, serverNow, o
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Amount ($)</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Amount (KSh)</label>
           <input
             type="number"
             min="0"

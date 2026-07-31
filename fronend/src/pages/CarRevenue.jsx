@@ -18,7 +18,7 @@ const TRIP_TYPES = [
 const getTripType = (val) => TRIP_TYPES.find(t => t.value === val) || TRIP_TYPES[3];
 
 const formatCurrency = (val) =>
-  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 }).format(val || 0);
+  'KSh ' + Number(val || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 const formatDate = (val) => {
   if (!val) return 'N/A';

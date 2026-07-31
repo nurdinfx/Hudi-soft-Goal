@@ -914,7 +914,7 @@ const Reports = ({
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 no-print">
               <StatCard
                 title="Total Collected"
-                value={`$${reportData.summary.totalCollected.toLocaleString()}`}
+                value={`KSh ${reportData.summary.totalCollected.toLocaleString()}`}
                 subtitle={`From ${reportData.summary.totalCustomers} customers`}
                 icon={DollarSign}
                 color="green"
@@ -928,7 +928,7 @@ const Reports = ({
               />
               <StatCard
                 title="Net Profit"
-                value={`$${reportData.summary.netProfit.toLocaleString()}`}
+                value={`KSh ${reportData.summary.netProfit.toLocaleString()}`}
                 subtitle={`After expenses and withdrawals`}
                 icon={CreditCard}
                 color={reportData.summary.netProfit >= 0 ? 'purple' : 'red'}
@@ -955,40 +955,40 @@ const Reports = ({
                   <div className="grid grid-cols-2 gap-4">
                     <div className="text-center p-4 bg-green-50 rounded-lg">
                       <DollarSign className="w-8 h-8 text-green-600 mx-auto mb-2" />
-                      <div className="text-2xl font-bold text-green-600">${(reportData.summary.totalIncome || reportData.summary.totalCollected).toLocaleString()}</div>
+                      <div className="text-2xl font-bold text-green-600">KSh {(reportData.summary.totalIncome || reportData.summary.totalCollected).toLocaleString()}</div>
                       <div className="text-sm text-green-800">Total Income</div>
                     </div>
                     <div className="text-center p-4 bg-red-50 rounded-lg">
                       <DollarSign className="w-8 h-8 text-red-600 mx-auto mb-2" />
-                      <div className="text-2xl font-bold text-red-600">${(reportData.summary.totalAllExpenses || reportData.expenses.total).toLocaleString()}</div>
+                      <div className="text-2xl font-bold text-red-600">KSh {(reportData.summary.totalAllExpenses || reportData.expenses.total).toLocaleString()}</div>
                       <div className="text-sm text-red-800">Total Expenses</div>
                     </div>
                   </div>
                   <div className="space-y-2 pt-2 border-t border-gray-100 text-sm">
                     <div className="flex justify-between text-gray-600">
                       <span>Customer Revenue:</span>
-                      <span className="font-semibold text-gray-900">${reportData.summary.totalCollected.toLocaleString()}</span>
+                      <span className="font-semibold text-gray-900">KSh {reportData.summary.totalCollected.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between text-gray-600">
                       <span>Car Revenue:</span>
-                      <span className="font-semibold text-emerald-600">${(reportData.summary.carRevenue || 0).toLocaleString()}</span>
+                      <span className="font-semibold text-emerald-600">KSh {(reportData.summary.carRevenue || 0).toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between text-gray-600">
                       <span>General Expenses:</span>
-                      <span className="font-semibold text-gray-900">${reportData.expenses.total.toLocaleString()}</span>
+                      <span className="font-semibold text-gray-900">KSh {reportData.expenses.total.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between text-gray-600">
                       <span>Car Expenses:</span>
-                      <span className="font-semibold text-gray-900">${(reportData.summary.carExpenses || 0).toLocaleString()}</span>
+                      <span className="font-semibold text-gray-900">KSh {(reportData.summary.carExpenses || 0).toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between text-gray-600">
                       <span>Owner Withdrawals:</span>
-                      <span className="font-semibold text-gray-900">${reportData.withdrawals.total.toLocaleString()}</span>
+                      <span className="font-semibold text-gray-900">KSh {reportData.withdrawals.total.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between text-base font-bold pt-2 border-t border-gray-200">
                       <span>Net Profit:</span>
                       <span className={reportData.summary.netProfit >= 0 ? 'text-purple-600' : 'text-red-600'}>
-                        ${reportData.summary.netProfit.toLocaleString()}
+                        KSh {reportData.summary.netProfit.toLocaleString()}
                       </span>
                     </div>
                   </div>
@@ -1087,9 +1087,9 @@ const Reports = ({
                                   <span className="px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">{village.partialCustomers} partial</span>
                                 </div>
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-semibold">${village.collected.toLocaleString()}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${village.due.toLocaleString()}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600 font-semibold">${village.unpaid.toLocaleString()}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-semibold">KSh {village.collected.toLocaleString()}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">KSh {village.due.toLocaleString()}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600 font-semibold">KSh {village.unpaid.toLocaleString()}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm">
                                 <div className="flex items-center">
                                   <span className={`font-semibold ${village.collectionRate >= 80 ? 'text-green-600' : village.collectionRate >= 60 ? 'text-yellow-600' : 'text-red-600'}`}>
@@ -1141,13 +1141,13 @@ const Reports = ({
                               <span className="capitalize">{car.carType}</span> • <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 capitalize">{car.status}</span>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">
-                              ${(car.monthlyCarRevenue || 0).toLocaleString()}
+                              KSh {(car.monthlyCarRevenue || 0).toLocaleString()}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600 font-medium">
-                              ${(car.monthlyCarExpenseAmount || 0).toLocaleString()}
+                              KSh {(car.monthlyCarExpenseAmount || 0).toLocaleString()}
                             </td>
                             <td className={`px-6 py-4 whitespace-nowrap text-sm font-bold ${netCarInc >= 0 ? 'text-purple-600' : 'text-red-600'}`}>
-                              ${netCarInc.toLocaleString()}
+                              KSh {netCarInc.toLocaleString()}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                               {car.lastMaintenance}

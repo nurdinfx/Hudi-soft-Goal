@@ -3,7 +3,7 @@ import { apiService } from '../services/api';
 import { Printer, MapPin, Plus, Loader, Edit3, Trash2 } from 'lucide-react';
 import VillageRecordForm from '../components/VillageRecordForm';
 
-const formatCurrency = (amount) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount || 0);
+const formatCurrency = (amount) => 'KSh ' + Number(amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const formatDate = (d) => new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 
 const sameDay = (a, b) => {

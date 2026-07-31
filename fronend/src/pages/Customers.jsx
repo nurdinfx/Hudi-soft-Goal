@@ -444,6 +444,17 @@ const Customers = () => {
     }
   };
 
+  const handleOpenPaymentModal = (customer) => {
+    const payment = getSelectedMonthPayment(customer);
+    setSelectedCustomer(customer);
+    const defaultAmount = payment.remaining > 0 ? payment.remaining : (customer.monthlyFee || 40);
+    setPaymentAmount(defaultAmount.toString());
+    if (cars.length > 0 && !selectedCarId) {
+      setSelectedCarId(cars[0]._id);
+    }
+    setShowPaymentModal(true);
+  };
+
   // Enhanced payment processing with carry-over calculation
   const processPayment = async () => {
     if (!paymentAmount || isNaN(paymentAmount) || parseFloat(paymentAmount) <= 0) {
@@ -451,14 +462,14 @@ const Customers = () => {
       return;
     }
 
+    if (!selectedCarId) {
+      alert('Please select a Water Cargo Car to record this car revenue!');
+      return;
+    }
+
     const amount = parseFloat(paymentAmount);
     const customer = selectedCustomer;
     const currentPayment = getSelectedMonthPayment(customer);
-
-    if (amount > currentPayment.remaining) {
-      alert(`Payment amount cannot exceed remaining balance of $${currentPayment.remaining.toFixed(2)}`);
-      return;
-    }
 
     setActionLoading('processing-payment');
 
@@ -470,11 +481,10 @@ const Customers = () => {
           await initializeMonthlyPayment(customer._id, selectedMonth, today);
         } catch (initError) {
           console.error('Error initializing monthly payment, continuing anyway:', initError);
-          // Continue with payment even if initialization fails
         }
       }
 
-      // Use the new partial payment endpoint
+      // Use the partial payment endpoint
       const response = await apiRequest(`/customers/${customer._id}/partial-payment`, {
         method: 'POST',
         body: JSON.stringify({
@@ -487,22 +497,20 @@ const Customers = () => {
 
       const updatedCustomer = response.data || response;
 
-      // Automatically record revenue to selected car if specified
-      if (selectedCarId) {
-        try {
-          await apiRequest(`/cars/${selectedCarId}/revenue`, {
-            method: 'POST',
-            body: JSON.stringify({
-              amount: amount,
-              date: new Date().toISOString(),
-              source: `Customer: ${customer.fullName}`,
-              description: `Water cargo payment from ${customer.fullName} (${customer.address || ''})`,
-              tripType: 'collection'
-            })
-          });
-        } catch (carRevError) {
-          console.error('Error auto-adding car revenue entry:', carRevError);
-        }
+      // Record revenue to selected car
+      try {
+        await apiRequest(`/cars/${selectedCarId}/revenue`, {
+          method: 'POST',
+          body: JSON.stringify({
+            amount: amount,
+            date: new Date().toISOString(),
+            source: `Customer: ${customer.fullName}`,
+            description: `Water cargo payment from ${customer.fullName} (${customer.address || ''})`,
+            tripType: 'collection'
+          })
+        });
+      } catch (carRevError) {
+        console.error('Error adding car revenue entry:', carRevError);
       }
 
       // Update local state
@@ -514,7 +522,7 @@ const Customers = () => {
       setSelectedCustomer(null);
       setPaymentAmount('');
       await loadData(); // Reload to get updated calculations
-      alert(`Payment of $${amount} processed successfully! ${selectedCarId ? 'Car revenue entry recorded.' : ''}`);
+      alert(`Payment of KSh ${amount} processed successfully! Added to Car Revenue.`);
     } catch (error) {
       console.error('Error processing payment:', error);
       const errorMessage = error.response?.data?.error || error.response?.data?.message || error.message || 'Unknown error';
@@ -1357,9 +1365,9 @@ const Customers = () => {
                         <Map className="w-4 h-4 mr-2 text-green-500" />
                         {getZoneName(customer)}
                       </div>
-                      <div className="flex items-center text-sm text-gray-900 mt-2">
+                      <div className="flex items-center text-sm text-gray-900 mt-2 font-medium">
                         <DollarSign className="w-4 h-4 mr-2 text-green-500" />
-                        ${(() => {
+                        KSh {(() => {
                           const payment = getSelectedMonthPayment(customer);
                           return payment.totalDue.toFixed(2);
                         })()}
@@ -1370,12 +1378,13 @@ const Customers = () => {
                         {/* Payment Status */}
                         <div className="flex flex-wrap items-center gap-2">
                           <button
-                            onClick={() => handlePaymentToggle(customer._id)}
+                            onClick={() => handleOpenPaymentModal(customer)}
                             disabled={isToggleLoading}
-                            className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition duration-200 min-w-[100px] justify-center ${payment.fullyPaid
+                            className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition duration-200 min-w-[110px] justify-center ${payment.fullyPaid
                               ? 'bg-green-500 text-white hover:bg-green-600'
-                              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                              : 'bg-blue-600 text-white hover:bg-blue-700'
                               } ${isToggleLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            title="Click to Pay / Select Car"
                           >
                             {isToggleLoading ? (
                               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -1387,19 +1396,10 @@ const Customers = () => {
                             ) : (
                               <>
                                 <XCircle className="w-4 h-4" />
-                                <span className="font-semibold text-sm">Unpaid</span>
+                                <span className="font-semibold text-sm">Pay / Select Car</span>
                               </>
                             )}
                           </button>
-
-                          {!payment.fullyPaid && payment.remaining > 0 && (
-                            <button
-                              onClick={() => handlePartialPayment(customer)}
-                              className="bg-yellow-500 text-white px-3 py-2 rounded-lg hover:bg-yellow-600 text-sm"
-                            >
-                              Add Payment
-                            </button>
-                          )}
                         </div>
 
                         {/* Payment Details */}
@@ -1407,28 +1407,28 @@ const Customers = () => {
                           {payment.previousBalance > 0 && !payment.fullyPaid && (
                             <div className="flex justify-between border-b border-blue-200 pb-1 mb-1">
                               <span className="text-xs md:text-sm">Previous Balance:</span>
-                              <strong className="text-orange-600 text-xs md:text-sm">${payment.previousBalance.toFixed(2)}</strong>
+                              <strong className="text-orange-600 text-xs md:text-sm">KSh {payment.previousBalance.toFixed(2)}</strong>
                             </div>
                           )}
                           <div className="flex justify-between">
-                            <span className="text-xs md:text-sm">Monthly Fee:</span>
-                            <strong className="text-blue-600 text-xs md:text-sm">${payment.monthlyFee}</strong>
+                            <span className="text-xs md:text-sm">Fee Amount:</span>
+                            <strong className="text-blue-600 text-xs md:text-sm">KSh {customer.monthlyFee || payment.monthlyFee || 0}</strong>
                           </div>
                           {payment.previousBalance > 0 && !payment.fullyPaid && (
                             <div className="flex justify-between border-t border-blue-200 pt-1 mt-1">
                               <span className="text-xs md:text-sm font-semibold">Total Due:</span>
-                              <strong className="text-purple-600 text-xs md:text-sm">${payment.totalDue.toFixed(2)}</strong>
+                              <strong className="text-purple-600 text-xs md:text-sm">KSh {payment.totalDue.toFixed(2)}</strong>
                             </div>
                           )}
                           {!payment.fullyPaid && (
                             <>
                               <div className="flex justify-between">
                                 <span className="text-xs md:text-sm">Paid:</span>
-                                <strong className="text-green-600 text-xs md:text-sm">${payment.paid.toFixed(2)}</strong>
+                                <strong className="text-green-600 text-xs md:text-sm">KSh {payment.paid.toFixed(2)}</strong>
                               </div>
                               <div className="flex justify-between">
                                 <span className="text-xs md:text-sm">Remaining:</span>
-                                <strong className="text-red-600 text-xs md:text-sm">${payment.remaining.toFixed(2)}</strong>
+                                <strong className="text-red-600 text-xs md:text-sm">KSh {payment.remaining.toFixed(2)}</strong>
                               </div>
                             </>
                           )}
@@ -1557,9 +1557,9 @@ const Customers = () => {
                             <td className="border border-gray-300 px-1 py-0 align-middle leading-none text-right">
                               {(() => {
                                 const prevMonthFullyPaid = isPreviousMonthFullyPaid(customer, selectedMonth);
-                                if (prevMonthFullyPaid) return `$${payment.monthlyFee.toFixed(2)}`;
-                                if (payment.previousBalance > 0 && !payment.fullyPaid) return `$${payment.totalDue.toFixed(2)}`;
-                                return `$${payment.monthlyFee.toFixed(2)}`;
+                                if (prevMonthFullyPaid) return `KSh ${payment.monthlyFee.toFixed(2)}`;
+                                if (payment.previousBalance > 0 && !payment.fullyPaid) return `KSh ${payment.totalDue.toFixed(2)}`;
+                                return `KSh ${payment.monthlyFee.toFixed(2)}`;
                               })()}
                             </td>
                             <td className="border border-gray-300 px-1 py-0 align-middle text-center"></td>
@@ -1637,10 +1637,11 @@ const Customers = () => {
       {showPaymentModal && selectedCustomer && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 no-print">
           <div className="bg-white rounded-xl p-4 md:p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
-            <h2 className="text-xl font-semibold mb-4">Add Payment</h2>
+            <h2 className="text-xl font-semibold mb-4">Water Cargo Payment & Car Revenue</h2>
             <div className="space-y-4">
               <div>
                 <p className="text-sm text-gray-600">Customer: <strong>{selectedCustomer.fullName}</strong></p>
+                <p className="text-sm text-gray-600">Address: <strong>{selectedCustomer.address}</strong></p>
                 <p className="text-sm text-gray-600">Month: <strong>{new Date(selectedMonth + '-01').toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</strong></p>
 
                 <div className="mt-2 p-3 bg-blue-50 rounded-lg space-y-2">
@@ -1651,28 +1652,28 @@ const Customers = () => {
                         {payment.previousBalance > 0 && !payment.fullyPaid && (
                           <div className="flex justify-between border-b border-blue-200 pb-2">
                             <span className="text-sm">Previous Balance:</span>
-                            <strong className="text-orange-600">${payment.previousBalance.toFixed(2)}</strong>
+                            <strong className="text-orange-600">KSh {payment.previousBalance.toFixed(2)}</strong>
                           </div>
                         )}
                         <div className="flex justify-between">
-                          <span className="text-sm">Monthly Fee:</span>
-                          <strong className="text-blue-600">${payment.monthlyFee}</strong>
+                          <span className="text-sm">Fee Amount:</span>
+                          <strong className="text-blue-600">KSh {selectedCustomer.monthlyFee || payment.monthlyFee || 0}</strong>
                         </div>
                         {payment.previousBalance > 0 && !payment.fullyPaid && (
                           <div className="flex justify-between border-t border-blue-200 pt-2 font-semibold">
                             <span className="text-sm">Total Due:</span>
-                            <strong className="text-purple-600">${payment.totalDue.toFixed(2)}</strong>
+                            <strong className="text-purple-600">KSh {payment.totalDue.toFixed(2)}</strong>
                           </div>
                         )}
                         {!payment.fullyPaid && (
                           <>
                             <div className="flex justify-between">
                               <span className="text-sm">Already Paid:</span>
-                              <strong className="text-green-600">${payment.paid.toFixed(2)}</strong>
+                              <strong className="text-green-600">KSh {payment.paid.toFixed(2)}</strong>
                             </div>
                             <div className="flex justify-between">
                               <span className="text-sm">Remaining:</span>
-                              <strong className="text-red-600">${payment.remaining.toFixed(2)}</strong>
+                              <strong className="text-red-600">KSh {payment.remaining.toFixed(2)}</strong>
                             </div>
                           </>
                         )}
@@ -1684,39 +1685,41 @@ const Customers = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Select Water Cargo Car (Add to Car Revenue)
+                  Select Water Cargo Car (Record Car Revenue) *
                 </label>
                 <select
                   value={selectedCarId}
                   onChange={(e) => setSelectedCarId(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
                 >
-                  <option value="">No Car (Customer Payment Only)</option>
+                  <option value="">-- Select Water Cargo Car * --</option>
                   {cars.map(car => (
                     <option key={car._id} value={car._id}>
                       🚗 {car.plateNumber} ({car.carType})
                     </option>
                   ))}
                 </select>
+                {!selectedCarId && (
+                  <p className="text-xs text-red-500 mt-1 font-medium">
+                    ⚠️ Please select a car to assign this revenue to.
+                  </p>
+                )}
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Payment Amount ($)
+                  Payment Amount (KSh) *
                 </label>
                 <input
                   type="number"
                   value={paymentAmount}
                   onChange={(e) => setPaymentAmount(e.target.value)}
                   min="0.01"
-                  max={getSelectedMonthPayment(selectedCustomer).remaining.toFixed(2)}
                   step="0.01"
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter payment amount"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg font-bold"
+                  placeholder="Enter amount e.g. 40"
                 />
-                <p className="text-xs text-gray-500 mt-1">
-                  Maximum: ${getSelectedMonthPayment(selectedCustomer).remaining.toFixed(2)}
-                </p>
               </div>
 
               <div className="flex justify-end space-x-3 pt-4">
@@ -1733,8 +1736,8 @@ const Customers = () => {
                 </button>
                 <button
                   onClick={processPayment}
-                  disabled={actionLoading === 'processing-payment'}
-                  className={`bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 flex items-center ${actionLoading === 'processing-payment' ? 'opacity-50 cursor-not-allowed' : ''
+                  disabled={actionLoading === 'processing-payment' || !selectedCarId}
+                  className={`bg-green-600 text-white px-5 py-2.5 rounded-lg hover:bg-green-700 font-medium flex items-center ${actionLoading === 'processing-payment' || !selectedCarId ? 'opacity-50 cursor-not-allowed' : ''
                     }`}
                 >
                   {actionLoading === 'processing-payment' ? (
@@ -1743,7 +1746,7 @@ const Customers = () => {
                       Processing...
                     </>
                   ) : (
-                    'Process Payment'
+                    'Confirm & Add Car Revenue'
                   )}
                 </button>
               </div>
@@ -1818,6 +1821,23 @@ const Customers = () => {
                 </select>
                 <p className="text-xs text-gray-500 mt-1">
                   Zone includes village information and collection day
+                </p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Water Delivery / Fee Amount (KSh)
+                </label>
+                <input
+                  type="number"
+                  name="monthlyFee"
+                  defaultValue={editingCustomer?.monthlyFee || 40}
+                  step="0.01"
+                  min="0"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+                  placeholder="e.g. 40"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Amount for water delivery (can be changed anytime e.g. 40 KSh)
                 </p>
               </div>
               <div className="flex justify-end space-x-3 pt-4">
@@ -2129,7 +2149,7 @@ const Customers = () => {
           }
         `}
       </style>
-    </div >
+    </div>
   );
 };
 

@@ -3,10 +3,7 @@ import { Plus, Edit, Trash2, Search, DollarSign, Calendar, FileText, CheckCircle
 import { apiService } from '../services/api';
 
 const formatCurrency = (amount) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD'
-  }).format(amount || 0);
+  return 'KSh ' + Number(amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 };
 
 const Withdrawals = () => {
