@@ -100,8 +100,8 @@ export default function InstallPwaPrompt() {
 
         {/* Header Branding */}
         <div className="flex items-center space-x-3 mb-4 pt-2">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-500 flex items-center justify-center text-white shadow-md shadow-blue-500/30">
-            <Droplets className="w-7 h-7 animate-pulse" />
+          <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center p-1 shadow-md shadow-blue-500/20 border border-blue-100">
+            <img src="/logo.png" alt="DUR-DUR Logo" className="w-full h-full object-contain" />
           </div>
           <div>
             <h3 className="text-xl font-bold text-gray-900 leading-tight">DUR-DUR CLEAN WATER</h3>

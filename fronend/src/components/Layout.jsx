@@ -96,8 +96,8 @@ const Layout = ({ children }) => {
           
           <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
             <div className="flex-shrink-0 flex items-center px-4">
-              <div className="h-9 w-9 bg-white rounded-xl flex items-center justify-center shadow-md">
-                <Droplets className="text-blue-600 h-5 w-5" />
+              <div className="h-9 w-9 bg-white rounded-xl flex items-center justify-center shadow-md p-1">
+                <img src="/logo.png" alt="DUR-DUR Logo" className="h-full w-full object-contain" />
               </div>
               <span className="ml-3 text-lg font-extrabold text-white tracking-tight">DUR-DUR CLEAN WATER</span>
             </div>
@@ -162,8 +162,8 @@ const Layout = ({ children }) => {
         <div className="flex-1 flex flex-col min-h-0 border-r border-blue-600 bg-blue-700">
           <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
             <div className="flex items-center flex-shrink-0 px-4">
-              <div className="h-9 w-9 bg-white rounded-xl flex items-center justify-center shadow-md">
-                <Droplets className="text-blue-600 h-5 w-5" />
+              <div className="h-9 w-9 bg-white rounded-xl flex items-center justify-center shadow-md p-1">
+                <img src="/logo.png" alt="DUR-DUR Logo" className="h-full w-full object-contain" />
               </div>
               <span className="ml-3 text-lg font-extrabold text-white tracking-tight">DUR-DUR CLEAN WATER</span>
             </div>

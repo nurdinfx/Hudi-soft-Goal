@@ -87,8 +87,8 @@ const Login = () => {
           
           {/* Brand Logo Header */}
           <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-600 via-sky-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/25">
-              <Droplets className="text-white w-6 h-6" />
+            <div className="w-11 h-11 rounded-2xl bg-white p-1 flex items-center justify-center shadow-lg shadow-blue-500/25 border border-blue-100">
+              <img src="/logo.png" alt="DUR-DUR Logo" className="w-full h-full object-contain" />
             </div>
             <div>
               <h2 className="text-xl font-black tracking-tight text-slate-900 leading-none">
@@ -274,8 +274,8 @@ const Login = () => {
               
               {/* Header Title & Subtitle */}
               <div className="text-center space-y-2">
-                <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-600 via-sky-500 to-indigo-600 shadow-xl shadow-blue-500/25 mb-1">
-                  <Droplets className="text-white w-8 h-8" />
+                <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white p-1 shadow-xl shadow-blue-500/25 border border-blue-100 mb-1">
+                  <img src="/logo.png" alt="DUR-DUR Logo" className="w-full h-full object-contain" />
                 </div>
 
                 <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
