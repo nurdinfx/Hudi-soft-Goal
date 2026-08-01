@@ -38,8 +38,16 @@ const getAvailableMonthsFromCustomers = (customers) => {
   // Always include current month
   monthSet.add(getCurrentMonth());
 
-
   customers.forEach(customer => {
+    // Check new monthlyPayments array (primary structure)
+    if (Array.isArray(customer.monthlyPayments)) {
+      customer.monthlyPayments.forEach(p => {
+        if (p.month && typeof p.month === 'string' && p.month.match(/^\d{4}-\d{2}$/)) {
+          monthSet.add(p.month);
+        }
+      });
+    }
+    // Also check old payments object (backward compatibility)
     if (customer.payments && typeof customer.payments === 'object') {
       Object.keys(customer.payments).forEach(month => {
         if (month && typeof month === 'string' && month.match(/^\d{4}-\d{2}$/)) {
@@ -49,12 +57,10 @@ const getAvailableMonthsFromCustomers = (customers) => {
     }
   });
 
-
   // Convert to array and sort by date (newest first)
   const months = Array.from(monthSet).sort((a, b) => {
     return new Date(b + '-01') - new Date(a + '-01');
   });
-
 
   return months.length > 0 ? months : [getCurrentMonth()];
 };
@@ -135,33 +141,46 @@ const useRealtimeData = (selectedMonth) => {
   return { ...data, refetch: fetchData };
 };
 
-// Payment calculation helper - IMPROVED
+// Payment calculation helper - reads new monthlyPayments array + old payments object
 const calculatePaymentData = (customer, selectedMonth) => {
   const monthlyFee = Number(customer.monthlyFee) || 0;
 
+  // Check new monthlyPayments array first (primary structure)
+  if (Array.isArray(customer.monthlyPayments)) {
+    const monthlyPayment = customer.monthlyPayments.find(p => p.month === selectedMonth);
+    if (monthlyPayment) {
+      const paid = Number(monthlyPayment.paid) || 0;
+      const remaining = Number(monthlyPayment.remaining) || Math.max(0, monthlyFee - paid);
+      const fullyPaid = monthlyPayment.fullyPaid === true || remaining <= 0;
+      return {
+        paid,
+        remaining: fullyPaid ? 0 : remaining,
+        fullyPaid,
+        status: fullyPaid ? 'paid' : paid > 0 ? 'partial' : 'unpaid'
+      };
+    }
+  }
 
-  // If no payments object or no payment for selected month
-  if (!customer.payments || !customer.payments[selectedMonth]) {
+  // Fallback to old payments object (backward compatibility)
+  if (customer.payments && customer.payments[selectedMonth]) {
+    const payment = customer.payments[selectedMonth];
+    const paid = Number(payment.paid) || 0;
+    const remaining = Number(payment.remaining) || (monthlyFee - paid);
+    const fullyPaid = payment.fullyPaid || paid >= monthlyFee;
     return {
-      paid: 0,
-      remaining: monthlyFee,
-      fullyPaid: false,
-      status: 'unpaid'
+      paid,
+      remaining,
+      fullyPaid,
+      status: fullyPaid ? 'paid' : paid > 0 ? 'partial' : 'unpaid'
     };
   }
 
-
-  const payment = customer.payments[selectedMonth];
-  const paid = Number(payment.paid) || 0;
-  const remaining = Number(payment.remaining) || (monthlyFee - paid);
-  const fullyPaid = payment.fullyPaid || paid >= monthlyFee;
-
-
+  // No payment record found for this month
   return {
-    paid,
-    remaining,
-    fullyPaid,
-    status: fullyPaid ? 'paid' : paid > 0 ? 'partial' : 'unpaid'
+    paid: 0,
+    remaining: monthlyFee,
+    fullyPaid: false,
+    status: 'unpaid'
   };
 };
 
