@@ -484,7 +484,7 @@ const CarRevenue = () => {
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-gray-600 mb-1">Amount ($) *</label>
+                <label className="block text-xs font-semibold text-gray-600 mb-1">Amount (KSh) *</label>
                 <input type="number" step="0.01" min="0.01" value={form.amount} onChange={e => setForm(f => ({ ...f, amount: e.target.value }))}
                   className="w-full px-4 py-2.5 rounded-xl border text-sm outline-none focus:ring-2" style={{ borderColor: formErrors.amount ? '#ef4444' : '#e5e7eb', focusBorderColor: '#2563eb' }} placeholder="0.00" />
                 {formErrors.amount && <p className="text-xs text-red-500 mt-1">{formErrors.amount}</p>}

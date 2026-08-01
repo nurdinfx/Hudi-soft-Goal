@@ -541,7 +541,7 @@ const CompanyExpenses = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Amount ($)</label>
+                  <label className="block text-sm font-medium text-gray-700">Amount (KSh)</label>
                   <input
                     type="number"
                     name="amount"
@@ -629,7 +629,7 @@ const CompanyExpenses = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Monthly Salary ($)</label>
+                  <label className="block text-sm font-medium text-gray-700">Monthly Salary (KSh)</label>
                   <input
                     type="number"
                     name="salary"

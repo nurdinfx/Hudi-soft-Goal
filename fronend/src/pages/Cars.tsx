@@ -468,7 +468,7 @@ const Cars = () => {
           <div class="stat-label">Active Cars</div>
         </div>
         <div class="stat-item">
-          <div class="stat-value">$${totalExpenses.toFixed(2)}</div>
+          <div class="stat-value">KSh ${totalExpenses.toFixed(2)}</div>
           <div class="stat-label">Total Expenses</div>
         </div>
         <div class="stat-item">
@@ -503,7 +503,7 @@ const Cars = () => {
                 <td><strong>${car.plateNumber}</strong></td>
                 <td>${car.carType}</td>
                 <td class="${statusClass}">${car.status?.toUpperCase()}</td>
-                <td>$${totalExpenses.toFixed(2)}</td>
+                <td>KSh ${totalExpenses.toFixed(2)}</td>
                 <td>${car.expenses?.length || 0}</td>
                 <td>${latestExpense ? formatExpenseDate(latestExpense.expenseDate || latestExpense.date) : 'N/A'}</td>
               </tr>
@@ -567,7 +567,7 @@ const Cars = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
                       <div className="bg-blue-50 border border-blue-100 p-3 rounded-lg">
                         <p className="text-xs uppercase text-blue-600">Total Expenses</p>
-                        <p className="text-xl font-semibold text-blue-900">${total.toFixed(2)}</p>
+                        <p className="text-xl font-semibold text-blue-900">KSh {total.toFixed(2)}</p>
                       </div>
                       <div className="bg-green-50 border border-green-100 p-3 rounded-lg">
                         <p className="text-xs uppercase text-green-600">Entries Recorded</p>
@@ -648,7 +648,7 @@ const Cars = () => {
         <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 text-center">
           <DollarSign className="w-8 h-8 text-purple-500 mx-auto mb-2" />
           <p className="text-sm text-gray-600">Total Expenses</p>
-          <p className="text-xl font-semibold">${totalExpenses.toFixed(2)}</p>
+          <p className="text-xl font-semibold">KSh {totalExpenses.toFixed(2)}</p>
         </div>
         <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 text-center">
           <FileText className="w-8 h-8 text-orange-500 mx-auto mb-2" />
@@ -740,7 +740,7 @@ const Cars = () => {
                       <div className="space-y-2 text-sm">
                         <div className="flex justify-between text-gray-900">
                           <span>Total Expenses:</span>
-                          <strong>${totalExpenses.toFixed(2)}</strong>
+                          <strong>KSh {totalExpenses.toFixed(2)}</strong>
                         </div>
                         <div className="flex justify-between text-gray-600">
                           <span>Last Expense:</span>

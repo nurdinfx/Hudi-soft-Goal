@@ -436,7 +436,7 @@ const Payments = ({ villages, customers, updateCustomer }) => {
             <DollarSign className="w-8 h-8 text-green-500 mr-3" />
             <div>
               <p className="text-sm text-gray-600">Total Collected</p>
-              <p className="text-xl font-semibold">${totalCollected.toLocaleString()}</p>
+              <p className="text-xl font-semibold">KSh {totalCollected.toLocaleString()}</p>
             </div>
           </div>
         </div>
@@ -445,7 +445,7 @@ const Payments = ({ villages, customers, updateCustomer }) => {
             <DollarSign className="w-8 h-8 text-red-500 mr-3" />
             <div>
               <p className="text-sm text-gray-600">Total Unpaid</p>
-              <p className="text-xl font-semibold">${totalUnpaid.toLocaleString()}</p>
+              <p className="text-xl font-semibold">KSh {totalUnpaid.toLocaleString()}</p>
             </div>
           </div>
         </div>
@@ -585,7 +585,7 @@ const Payments = ({ villages, customers, updateCustomer }) => {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">
-                      ${payment.amount}
+                      KSh {payment.amount}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
@@ -597,7 +597,7 @@ const Payments = ({ villages, customers, updateCustomer }) => {
                       </span>
                       {payment.paidAmount > 0 && payment.status === 'unpaid' && (
                         <div className="text-xs text-gray-500 mt-1">
-                          Partial: ${payment.paidAmount} paid
+                          Partial: KSh {payment.paidAmount} paid
                         </div>
                       )}
                     </td>
@@ -660,8 +660,8 @@ const Payments = ({ villages, customers, updateCustomer }) => {
               <h2 className="text-xl font-bold mb-4">Summary</h2>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p><strong>Total Collected:</strong> ${printData.summary.totalCollected.toLocaleString()}</p>
-                  <p><strong>Total Unpaid:</strong> ${printData.summary.totalUnpaid.toLocaleString()}</p>
+                  <p><strong>Total Collected:</strong> KSh {printData.summary.totalCollected.toLocaleString()}</p>
+                  <p><strong>Total Unpaid:</strong> KSh {printData.summary.totalUnpaid.toLocaleString()}</p>
                 </div>
                 <div>
                   <p><strong>Paid Customers:</strong> {printData.summary.paidCount}</p>
@@ -689,10 +689,10 @@ const Payments = ({ villages, customers, updateCustomer }) => {
                     <td>{payment.customerName}</td>
                     <td>{payment.phoneNumber}</td>
                     <td>{payment.village}</td>
-                    <td>${payment.amount}</td>
+                    <td>KSh {payment.amount}</td>
                     <td>{payment.status}</td>
                     <td>{payment.paidDate ? new Date(payment.paidDate).toLocaleDateString() : 'N/A'}</td>
-                    <td>${payment.paidAmount}</td>
+                    <td>KSh {payment.paidAmount}</td>
                   </tr>
                 ))}
               </tbody>

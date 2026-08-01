@@ -452,15 +452,15 @@ const Workers = () => {
           <div class="stats">
             <div class="stat-card">
               <h3>Total Salary</h3>
-              <p>$${overallStats.totalMonthlySalary.toFixed(2)}</p>
+              <p>KSh ${overallStats.totalMonthlySalary.toFixed(2)}</p>
             </div>
             <div class="stat-card">
               <h3>Total Expenses</h3>
-              <p>$${overallStats.totalWorkerExpenses.toFixed(2)}</p>
+              <p>KSh ${overallStats.totalWorkerExpenses.toFixed(2)}</p>
             </div>
             <div class="stat-card">
               <h3>Net Payment</h3>
-              <p>$${overallStats.totalFinalPayment.toFixed(2)}</p>
+              <p>KSh ${overallStats.totalFinalPayment.toFixed(2)}</p>
             </div>
           </div>
 
@@ -485,9 +485,9 @@ const Workers = () => {
                   <td>${worker.fullName}</td>
                   <td>${worker.phoneNumber}</td>
                   <td>${formatDate(worker.hireDate)}</td>
-                  <td>$${worker.monthlySalary.toFixed(2)}</td>
-                  <td>$${worker.totalExpenses.toFixed(2)}</td>
-                  <td>$${worker.finalPayment.toFixed(2)}</td>
+                  <td>KSh ${worker.monthlySalary.toFixed(2)}</td>
+                  <td>KSh ${worker.totalExpenses.toFixed(2)}</td>
+                  <td>KSh ${worker.finalPayment.toFixed(2)}</td>
                 </tr>
               `).join('')}
             </tbody>
@@ -597,17 +597,17 @@ const Workers = () => {
         <div className="bg-white p-3 sm:p-4 rounded-lg shadowSm border border-gray-200 text-center">
           <DollarSign className="w-6 h-6 sm:w-8 sm:h-8 text-green-500 mx-auto mb-2" />
           <p className="text-xs sm:text-sm text-gray-600">Monthly Salary</p>
-          <p className="text-lg sm:text-xl font-semibold">${overallStats.totalMonthlySalary.toFixed(2)}</p>
+          <p className="text-lg sm:text-xl font-semibold">KSh {overallStats.totalMonthlySalary.toFixed(2)}</p>
         </div>
         <div className="bg-white p-3 sm:p-4 rounded-lg shadow-sm border border-gray-200 text-center">
           <FileText className="w-6 h-6 sm:w-8 sm:h-8 text-orange-500 mx-auto mb-2" />
           <p className="text-xs sm:text-sm text-gray-600">Total Expenses</p>
-          <p className="text-lg sm:text-xl font-semibold">${overallStats.totalWorkerExpenses.toFixed(2)}</p>
+          <p className="text-lg sm:text-xl font-semibold">KSh {overallStats.totalWorkerExpenses.toFixed(2)}</p>
         </div>
         <div className="bg-white p-3 sm:p-4 rounded-lg shadow-sm border border-gray-200 text-center">
           <DollarSign className="w-6 h-6 sm:w-8 sm:h-8 text-green-500 mx-auto mb-2" />
           <p className="text-xs sm:text-sm text-gray-600">Net Payment</p>
-          <p className="text-lg sm:text-xl font-semibold">${overallStats.totalFinalPayment.toFixed(2)}</p>
+          <p className="text-lg sm:text-xl font-semibold">KSh {overallStats.totalFinalPayment.toFixed(2)}</p>
         </div>
       </div>
 
@@ -699,13 +699,13 @@ const Workers = () => {
                     <td className="px-3 sm:px-4 py-4 hidden md:table-cell">
                       <div className="space-y-2">
                         <div className="text-sm font-semibold text-gray-900">
-                          Salary: ${workerStats.monthlySalary.toFixed(2)}
+                          Salary: KSh {workerStats.monthlySalary.toFixed(2)}
                         </div>
                         <div className="text-sm font-semibold text-orange-600">
-                          Expenses: ${workerStats.totalExpenses.toFixed(2)}
+                          Expenses: KSh {workerStats.totalExpenses.toFixed(2)}
                         </div>
                         <div className={`text-sm font-bold ${workerStats.finalPayment > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                          Final: ${workerStats.finalPayment.toFixed(2)}
+                          Final: KSh {workerStats.finalPayment.toFixed(2)}
                         </div>
                       </div>
                     </td>
@@ -723,7 +723,7 @@ const Workers = () => {
                                   )}
                                 </div>
                                 <div className="flex items-center space-x-1 ml-2 flex-shrink-0">
-                                  <span className="font-semibold text-xs">${expense.amount.toFixed(2)}</span>
+                                  <span className="font-semibold text-xs">KSh {expense.amount.toFixed(2)}</span>
                                   <button
                                     onClick={() => handleDeleteExpense(worker._id, expense._id)}
                                     className="text-red-500 hover:text-red-700 text-xs ml-1"
@@ -912,7 +912,7 @@ const Workers = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Salary ($) *
+                      Salary (KSh) *
                     </label>
                     <input
                       type="number"
@@ -1027,16 +1027,16 @@ const Workers = () => {
 
             <div className="bg-orange-50 p-3 rounded-lg mb-4">
               <div className="text-sm text-orange-700 space-y-1">
-                <div><strong>Worker Salary:</strong> ${((selectedWorkerExpenses?.salary || selectedWorkerExpenses?.monthlySalary || 0)).toFixed(2)}</div>
-                <div><strong>Total Expenses:</strong> ${selectedExpenseTotalDisplay}</div>
-                <div><strong>Remaining Salary:</strong> ${selectedExpenseStats ? selectedExpenseStats.finalPayment.toFixed(2) : '0.00'}</div>
+                <div><strong>Worker Salary:</strong> KSh {((selectedWorkerExpenses?.salary || selectedWorkerExpenses?.monthlySalary || 0)).toFixed(2)}</div>
+                <div><strong>Total Expenses:</strong> KSh {selectedExpenseTotalDisplay}</div>
+                <div><strong>Remaining Salary:</strong> KSh {selectedExpenseStats ? selectedExpenseStats.finalPayment.toFixed(2) : '0.00'}</div>
               </div>
             </div>
 
             <form onSubmit={handleSubmitExpense} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Amount ($) *
+                  Amount (KSh) *
                 </label>
                 <input
                   type="number"
